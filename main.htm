@@ -39,17 +39,19 @@
     })]).then(function(loadData){
         let topo = loadData[0]
         console.log(topo)
-        let mouseOver = function(d) {
-        d3.selectAll(".Country")
-          .transition()
-          .duration(200)
-          .style("opacity", .5)
-        d3.select(this)
-          .transition()
-          .duration(200)
-          .style("opacity", 1)
-          .style("stroke", "black")
-      }
+        let mouseOver = function(event,d) {
+            console.log(d.total)
+            console.log(d.properties.name)
+            d3.selectAll(".Country")
+            .transition()
+            .duration(200)
+            .style("opacity", .5)
+            d3.select(this)
+            .transition()
+            .duration(200)
+            .style("opacity", 1)
+            .style("stroke", "black")
+        }
     
       let mouseLeave = function(d) {
         d3.selectAll(".Country")
