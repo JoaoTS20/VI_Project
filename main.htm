@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,7 +26,7 @@
             height = 500 - margin.top - margin.bottom;
 
         //Read the data
-        d3.csv("dataset.csv").then( function(data) {
+        d3.csv("newdataset.csv").then( function(data) {
 
             // append the svg object to the body of the page
             const svg = d3.select("#my_dataviz")
@@ -75,7 +74,7 @@
 
             const mousemove = function(event, d) {
                 tooltip
-                .html(`${d.original_title}\nPopularity Score: ${d.popularity} \nBudget:${d.budget} ${eval(d.production_companies)} `)
+                .html(`${d.original_title}\nPopularity Score: ${d.popularity} \nBudget:${d.budget}`)
                 .style("left", (event.x) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
                 .style("top", (event.y) + "px")
             }
@@ -97,17 +96,23 @@
                 .attr("cx", function (d) { return x(parseFloat(d.popularity)); } )
                 .attr("cy", function (d) { return y(parseFloat(d.budget) ); } )
                 .attr("r", 1.5)
-                .style("fill", "#69b3a2")
+                .style("fill", "red")
                 //.style("opacity", 0.3)
                 //.style("stroke", "white")
                 .on("mouseover", mouseover )
                 .on("mousemove", mousemove )
                 .on("mouseleave", mouseleave )
             
-            var all_circles=svg.selectAll("circle")
+            const all_circles=svg.selectAll("circle")
             d3.select("button").on("click", function() {
                 studio = d3.select("#txtStudio").node().value;
                 newData = data.filter(function(d){ return  eval(d.production_companies).includes(studio)})
+                
+                if (newData.length==0){
+                    newData = data
+                    console.log("empthy")
+                }
+                
                 console.log(newData)
                 // Update X axis
                 x.domain([0, d3.max(newData, function(d){ return (parseFloat(d.popularity))})])
@@ -117,10 +122,10 @@
                 y.domain([0, d3.max(newData, function(d){ return parseFloat(d.budget)})])
                 yAxis.transition().duration(1000).call(d3.axisLeft(y));
 
-            
+                
                 let circles = all_circles.data(newData);
                 // Add dots
-                console.log(circles)
+                console.log(all_circles)
                 
                 circles
                 .attr("cx", function (d) { return x(parseFloat(d.popularity)); } )
@@ -134,14 +139,14 @@
                 .attr("cx", function (d) { return x(parseFloat(d.popularity)); } )
                 .attr("cy", function (d) { return y(parseFloat(d.budget) ); } )
                 .attr("r", 1.5)
-                .style("fill", "#69b3a2")
+                .style("fill", "red")
                 //.style("opacity", 0.3)
                 //.style("stroke", "white")
                 .on("mouseover", mouseover )
                 .on("mousemove", mousemove )
                 .on("mouseleave", mouseleave )
                 circles.exit().remove();
-
+                console.log(circles)
 
             })
 
