@@ -8,6 +8,8 @@
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300" rel='stylesheet' type='text/css'>
 		<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 
+		<link href="imports/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet"> <!--load all styles -->
+
 		<!-- D3.js -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
         <link rel="stylesheet" href="radarChart.css">
@@ -18,9 +20,13 @@
 		<div class="container">
 			<div class="radarChart"></div>
 			<div class="filters">
-				<label for="exampleFormControlTextarea1" class="form-label">Search Director</label>
+				<label for="exampleFormControlTextarea1" class="form-label">Search Director:</label>
 				<!--input id="txtStudio" name="txt-Name" class="form-control me-2" type="search" placeholder="Director Name" aria-label="Search"-->
-				<select name="directores" id="directores"></select>
+				<select name="directores" id="directores">
+					<option id="selectdirector">-----</option>
+				</select>
+				<p><b id="directorName"></b></p>
+				<p id="directornumber" ></p>
 				<!--button id="btsearch" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button-->
 			</div>
 			
@@ -53,6 +59,11 @@
 					eval(element["director"]).forEach(dire => {arrayDirectorOptions.push(dire)})
 				});
 				console.log(arrayDirectorOptions)
+				
+				var directorname=document.getElementById("directorName");
+
+				var directornumber=document.getElementById("directornumber");
+				
 				//Create and append select list
 				var selectList = document.getElementById("directores");
 
@@ -63,14 +74,15 @@
 					option.text = element;
 					selectList.appendChild(option);
 				});
-			
+				
+				//Default Values
+				default_data=[]
+				genres.forEach(element => {default_data.push({axis:element,value:0})});
 
 				////////////////////////////////////////////////////////////// 
 				//////////////////// Draw the Chart ////////////////////////// 
 				////////////////////////////////////////////////////////////// 
-				default_data=[]
-				genres.forEach(element => {default_data.push({axis:element,value:0})});
-				data_to_graph=[default_data]
+
 				var color = d3.scale.ordinal()
 					.range(["#EDC951","#CC333F","#00A0B0"]);
 					
@@ -85,34 +97,32 @@
 				};
 				
 				//Call function to draw the Radar chart
-				RadarChart(".radarChart", data_to_graph, radarChartOptions);
+				RadarChart(".radarChart", [default_data], radarChartOptions);
 				
 				d3.select("#directores").on("change", change)
 					function change() {
 						director=this.options[this.selectedIndex].value
-						console.log(director)
-						newData = data.filter(function(d){ return eval(d.director).includes(director)})
-						new_data_to_graph=[]
-						genres.forEach(element => {new_data_to_graph.push({axis:element,value: newData.filter(function(d){return eval(d.genres).includes(element)}).length/newData.length})});
-						console.log(new_data_to_graph)
-						RadarChart(".radarChart", [new_data_to_graph], radarChartOptions);
+						if(director=="-----"){
+							
+							RadarChart(".radarChart", [default_data], radarChartOptions);
+							directorname.innerHTML='<i class="fas fa-video"></i>'
+							directornumber.innerHTML='<i class="fas fa-film"></i>'
+						}
+						else{
+							console.log(director)
+							newData = data.filter(function(d){ return eval(d.director).includes(director)})
+							console.log(newData)
+							genres.clear()
+							newData.forEach(element =>{eval(element["genres"]).forEach(gen =>{genres.add(gen)})});
+							console.log(genres)
+							new_data_to_graph=[]
+							genres.forEach(element => {new_data_to_graph.push({axis:element,value: newData.filter(function(d){return eval(d.genres).includes(element)}).length/newData.length})});
+							console.log(new_data_to_graph)
+							RadarChart(".radarChart", [new_data_to_graph], radarChartOptions);
+							directorname.innerHTML='<i class="fas fa-video"></i> '+ director
+							directornumber.innerHTML='<i class="fas fa-film"></i>'+" Directed "+newData.length+" Movies"
+						}
 					}
-					
-				//newData = data.filter(function(d){ return  eval(d.director).includes("Steven Spielberg")})
-				//console.log(newData);
-				//var genres= new Set();
-				//newData.forEach(element => {
-				//    eval(element["genres"]).forEach(genre => {genres.add(genre)});
-				//});
-				//console.log(genres)
-				//x=[]
-				//genres.forEach(element => {x.push({axis:element,value: newData.filter(function(d){return eval(d.genres).includes(element)}).length/newData.length })});
-				//console.log(x)
-
-				//x.append({axis:,value:})
-				//data = [ x
-						//];
-
         });
         </script>
 	</body>
