@@ -41,6 +41,12 @@
 			////////////////////////////////////////////////////////////// 
             
             d3.csv("newdataset.csv", function(data) {
+
+
+			//default_data=[]
+			//genres.forEach(element => {default_data.push({axis:element,value:0})});
+			//data=[default_data]
+			
             newData = data.filter(function(d){ return  eval(d.director).includes("Steven Spielberg")})
             console.log(newData);
             var genres= new Set();
@@ -73,6 +79,7 @@
 			};
 			//Call function to draw the Radar chart
 			RadarChart(".radarChart", data, radarChartOptions);
+
         });
         </script>
 	</body>
