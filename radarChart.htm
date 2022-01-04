@@ -19,9 +19,11 @@
 			<div class="radarChart"></div>
 			<div class="filters">
 				<label for="exampleFormControlTextarea1" class="form-label">Search Director</label>
-				<input id="txtStudio" name="txt-Name" class="form-control me-2" type="search" placeholder="Director Name" aria-label="Search">
-				<button id="btsearch" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+				<!--input id="txtStudio" name="txt-Name" class="form-control me-2" type="search" placeholder="Director Name" aria-label="Search"-->
+				<select name="directores" id="directores"></select>
+				<!--button id="btsearch" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button-->
 			</div>
+			
 		</div>
 		<script src="radarChart.js"></script>	
 		<script>
@@ -39,47 +41,77 @@
 			////////////////////////////////////////////////////////////// 
 			////////////////////////// Data ////////////////////////////// 
 			////////////////////////////////////////////////////////////// 
-            
+
+
             d3.csv("newdataset.csv", function(data) {
-
-
-			//default_data=[]
-			//genres.forEach(element => {default_data.push({axis:element,value:0})});
-			//data=[default_data]
-			
-            newData = data.filter(function(d){ return  eval(d.director).includes("Steven Spielberg")})
-            console.log(newData);
-            var genres= new Set(['Action', 'TV Movie', 'Romance', 'Foreign', 'Comedy', 'Animation', 'Western', 'Drama', 'War', 'Family', 'Science Fiction', 'History', 'Adventure', 'Music', 'Thriller', 'Horror', 'Mystery', 'Fantasy', 'Documentary', 'Crime']);
-			//var genres= new Set();
-            //newData.forEach(element => {
-            //    eval(element["genres"]).forEach(genre => {genres.add(genre)});
-            //});
-			console.log(genres)
-            x=[]
-            genres.forEach(element => {x.push({axis:element,value: newData.filter(function(d){return eval(d.genres).includes(element)}).length/newData.length })});
-            console.log(x)
-
-            //x.append({axis:,value:})
-			data = [ x
-					];
-			////////////////////////////////////////////////////////////// 
-			//////////////////// Draw the Chart ////////////////////////// 
-			////////////////////////////////////////////////////////////// 
-
-			var color = d3.scale.ordinal()
-				.range(["#EDC951","#CC333F","#00A0B0"]);
 				
-			var radarChartOptions = {
-			  w: width,
-			  h: height,
-			  margin: margin,
-			  maxValue: 0.5,
-			  levels: 5,
-			  roundStrokes: true,
-			  color: color
-			};
-			//Call function to draw the Radar chart
-			RadarChart(".radarChart", data, radarChartOptions);
+				var genres= new Set(['Action', 'TV Movie', 'Romance', 'Foreign', 'Comedy', 'Animation', 'Western', 'Drama', 'War', 'Family', 'Science Fiction', 'History', 'Adventure', 'Music', 'Thriller', 'Horror', 'Mystery', 'Fantasy', 'Documentary', 'Crime']);
+
+				//Create array of options to be added
+				var arrayDirectorOptions = [];
+				data.forEach(element=> {
+					eval(element["director"]).forEach(dire => {arrayDirectorOptions.push(dire)})
+				});
+				console.log(arrayDirectorOptions)
+				//Create and append select list
+				var selectList = document.getElementById("directores");
+
+				//Create and append the options
+				new Set(arrayDirectorOptions.sort()).forEach( element => {
+					var option = document.createElement("option");
+					option.value = element;
+					option.text = element;
+					selectList.appendChild(option);
+				});
+			
+
+				////////////////////////////////////////////////////////////// 
+				//////////////////// Draw the Chart ////////////////////////// 
+				////////////////////////////////////////////////////////////// 
+				default_data=[]
+				genres.forEach(element => {default_data.push({axis:element,value:0})});
+				data_to_graph=[default_data]
+				var color = d3.scale.ordinal()
+					.range(["#EDC951","#CC333F","#00A0B0"]);
+					
+				var radarChartOptions = {
+				w: width,
+				h: height,
+				margin: margin,
+				maxValue: 1,
+				levels: 5,
+				roundStrokes: true,
+				color: color
+				};
+				
+				//Call function to draw the Radar chart
+				RadarChart(".radarChart", data_to_graph, radarChartOptions);
+				
+				d3.select("#directores").on("change", change)
+					function change() {
+						director=this.options[this.selectedIndex].value
+						console.log(director)
+						newData = data.filter(function(d){ return eval(d.director).includes(director)})
+						new_data_to_graph=[]
+						genres.forEach(element => {new_data_to_graph.push({axis:element,value: newData.filter(function(d){return eval(d.genres).includes(element)}).length/newData.length})});
+						console.log(new_data_to_graph)
+						RadarChart(".radarChart", [new_data_to_graph], radarChartOptions);
+					}
+					
+				//newData = data.filter(function(d){ return  eval(d.director).includes("Steven Spielberg")})
+				//console.log(newData);
+				//var genres= new Set();
+				//newData.forEach(element => {
+				//    eval(element["genres"]).forEach(genre => {genres.add(genre)});
+				//});
+				//console.log(genres)
+				//x=[]
+				//genres.forEach(element => {x.push({axis:element,value: newData.filter(function(d){return eval(d.genres).includes(element)}).length/newData.length })});
+				//console.log(x)
+
+				//x.append({axis:,value:})
+				//data = [ x
+						//];
 
         });
         </script>
