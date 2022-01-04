@@ -49,11 +49,12 @@
 			
             newData = data.filter(function(d){ return  eval(d.director).includes("Steven Spielberg")})
             console.log(newData);
-            var genres= new Set();
-            newData.forEach(element => {
-                eval(element["genres"]).forEach(genre => {genres.add(genre)});
-            });
-            console.log(genres)
+            var genres= new Set(['Action', 'TV Movie', 'Romance', 'Foreign', 'Comedy', 'Animation', 'Western', 'Drama', 'War', 'Family', 'Science Fiction', 'History', 'Adventure', 'Music', 'Thriller', 'Horror', 'Mystery', 'Fantasy', 'Documentary', 'Crime']);
+			//var genres= new Set();
+            //newData.forEach(element => {
+            //    eval(element["genres"]).forEach(genre => {genres.add(genre)});
+            //});
+			console.log(genres)
             x=[]
             genres.forEach(element => {x.push({axis:element,value: newData.filter(function(d){return eval(d.genres).includes(element)}).length/newData.length })});
             console.log(x)
