@@ -2,7 +2,7 @@
 <meta charset="utf-8">
           
 <!-- Load d3.js -->
-<script src="https://d3js.org/d3.v6.js"></script>
+<script src="http://d3js.org/d3.v6.js"></script>
 
 <!-- Create an element where the map will take place -->
 <svg id="my_dataviz" width="500" height="400"></svg>
@@ -24,15 +24,17 @@
     // Data and color scale
     const data = new Map();
     const colorScale = d3.scaleThreshold()
-      .domain([100000, 1000000, 10000000, 30000000, 100000000, 500000000])
+      .domain([10, 20, 50, 100, 1000, 10000])
       .range(d3.schemeBlues[7]);
-    
+    const countOccurrences = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
     // Load external data and boot
     Promise.all([
     d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"),
-    d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv", function(d) {
-        
-        data.set(d.name, +d.pop)
+    d3.csv("newdataset.csv").then(function(d) {
+        countries=[]
+        d.forEach(element => {eval(element.production_countries).forEach(cou => {countries.push(cou)})});
+        cout_set=new Set(countries)
+        cout_set.forEach(country => {data.set(country,countOccurrences(countries,country))})
         console.log(data)
     })]).then(function(loadData){
         let topo = loadData[0]

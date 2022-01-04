@@ -6,17 +6,16 @@ def parserTSVDict(document):
 
 
 def main():
-        file=parserTSVDict("dataset.csv")
+        file=parserTSVDict("newdataset.csv")
         rows=[]
         fieldnames=["id","budget","genres","original_language","original_title","overview","popularity","poster_path","production_companies","production_countries","release_date","revenue","spoken_languages","title","director"
 ]
+        s={}
+        d=[]
         for row in file:
-            if float(row["budget"]) > 0:
-                rows.append(row)
-        with open("newcsv.csv","w", encoding='UTF8', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(rows)
+            for a in eval(row["production_countries"]):
+                d.append(a)
+        print(d)
 
 if __name__ == "__main__":
     main()
