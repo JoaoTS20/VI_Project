@@ -104,7 +104,7 @@
                 .on("mousemove", mousemove )
                 .on("mouseleave", mouseleave )
             
-
+            var all_circles=svg.selectAll("circle")
             d3.select("button").on("click", function() {
                 studio = d3.select("#txtStudio").node().value;
                 newData = data.filter(function(d){ return  eval(d.production_companies).includes(studio)})
@@ -118,7 +118,7 @@
                 yAxis.transition().duration(1000).call(d3.axisLeft(y));
 
             
-                let circles = svg.selectAll("circle").data(newData);
+                let circles = all_circles.data(newData);
                 // Add dots
                 console.log(circles)
                 
