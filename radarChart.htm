@@ -13,9 +13,16 @@
         <link rel="stylesheet" href="radarChart.css">
 	</head>
 	<body>
-        <h2>Director's Specialty in Movie Genders</h2>
-		<div class="radarChart"></div>
-
+        
+		<h2>Director's Specialty in Movie Genders</h2>
+		<div class="container">
+			<div class="radarChart"></div>
+			<div class="filters">
+				<label for="exampleFormControlTextarea1" class="form-label">Search Director</label>
+				<input id="txtStudio" name="txt-Name" class="form-control me-2" type="search" placeholder="Director Name" aria-label="Search">
+				<button id="btsearch" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+			</div>
+		</div>
 		<script src="radarChart.js"></script>	
 		<script>
       
@@ -26,7 +33,7 @@
 			////////////////////////////////////////////////////////////// 
 
 			var margin = {top: 100, right: 100, bottom: 100, left: 100},
-				width = Math.min(600, window.innerWidth - 10) - margin.left - margin.right,
+				width = Math.min(550, window.innerWidth - 10) - margin.left - margin.right,
 				height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20);
 					
 			////////////////////////////////////////////////////////////// 
