@@ -8,7 +8,25 @@
     <!-- Create an element where the map will take place -->
     <div class="container">
         <h2>Movie Production Geographic Distribution</h2>
-        <div class="radarChart"><svg id="my_dataviz" width="450" height="350"></svg></div>
+        <div class="radarChart">
+          <svg id="my_dataviz" width="500" height="400"></svg>
+          <button type="button" class="btn btn-secondary">All Time</button>
+          <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+              <button type="button" class="btn btn-secondary">1920s</button>
+              <button type="button" class="btn btn-secondary">1930s</button>
+              <button type="button" class="btn btn-secondary">1940s</button>
+              <button type="button" class="btn btn-secondary">1950s</button>
+              <button type="button" class="btn btn-secondary">1960s</button>
+              <button type="button" class="btn btn-secondary">1970s</button>
+              <button type="button" class="btn btn-secondary">1980s</button>
+              <button type="button" class="btn btn-secondary">1990s</button>
+              <button type="button" class="btn btn-secondary">2000s</button>
+              <button type="button" class="btn btn-secondary">2010s</button>
+            </div>
+          </div>
+        </div>
+
         <div class="filters">
           Top 10 Producers 
           <table id="table_producers" border="1px solid black"></table>

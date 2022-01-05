@@ -11,12 +11,12 @@ body {
     height: 50%;
   }
 .radarChart{
-    width: 75%;
+    width: 80%;
     height: 100%;
     float: left;
 }
 .filters {
-    width: 25%;
+    width: 20%;
     height: 100%;
     float: left;
   }
