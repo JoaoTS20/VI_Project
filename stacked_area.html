@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="stacked_area.css">
+    <script type="text/javascript" src="http://d3js.org/d3.v6.js"></script>
+</head>
+
+<body>
+    <div class="container center-this pad-container">
+        <div class="row">
+            <div class="col"><h2>Evolution of </h2></div>
+            <div class="col">
+                <select name="mode"class="form-select" id="mode">
+                    <option value="lang">Languages</option>
+                    <option value="studios">Studios</option>
+                </select>
+            </div>
+            <div class="col">
+                <h2> in movies along time</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="div_d3"></div>
+            </div>
+            <div class="col">
+                <label for="search" style="display: block;" >Add to Compare:</label>
+                <input type="text" id="search">
+                <ul class="list-group" id="item_list">
+                    <li class="list-group-item">Language or Studio Item</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script src="stacked_area.js"></script>
+</body>
+</html>
