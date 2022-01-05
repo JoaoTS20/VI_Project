@@ -3,10 +3,15 @@
           
 <!-- Load d3.js -->
 <script src="http://d3js.org/d3.v6.js"></script>
-
-<!-- Create an element where the map will take place -->
-<svg id="my_dataviz" width="500" height="400"></svg>
-
+<link rel="stylesheet" href="choropleth.css">
+<html>
+    <!-- Create an element where the map will take place -->
+    <div class="container">
+        <h2>Movie Production Geographic Distribution</h2>
+        <div class="radarChart"><svg id="my_dataviz" width="450" height="350"></svg></div>
+        <div class="filters">sadsa</div>
+    </div>
+</html>
 <script>
 
     // The svg
@@ -29,8 +34,8 @@
     const countOccurrences = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
     // Load external data and boot
     Promise.all([
-    d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"),
-    d3.csv("newdataset.csv").then(function(d) {
+    d3.json("world.geojson"),
+    d3.csv("dataset.csv").then(function(d) {
         countries=[]
         d.forEach(element => {eval(element.production_countries).forEach(cou => {countries.push(cou)})});
         cout_set=new Set(countries)
