@@ -9,7 +9,10 @@
     <div class="container">
         <h2>Movie Production Geographic Distribution</h2>
         <div class="radarChart"><svg id="my_dataviz" width="450" height="350"></svg></div>
-        <div class="filters">sadsa</div>
+        <div class="filters">
+          Top 10 Producers 
+          <table id="table_producers" border="1px solid black"></table>
+        </div>
     </div>
 </html>
 <script>
@@ -41,6 +44,25 @@
         cout_set=new Set(countries)
         cout_set.forEach(country => {data.set(country,countOccurrences(countries,country))})
         console.log(data)
+        table=document.getElementById( 'table_producers' )
+        var header = table.createTHead();
+        var top10_countrys= new Map( Array.from( new Map([...data.entries()].sort((a, b) => a[1] - b[1])) ).slice(-10))
+        top10_countrys.forEach((values,keys)=>{
+          row = table.insertRow(0);
+          cell1 = row.insertCell(0);
+          cell2 = row.insertCell(1);
+          cell1.innerHTML = keys;
+          cell2.innerHTML = values;
+        })
+
+        
+        var rowheader = header.insertRow(0);
+        var cellheader_country = rowheader.insertCell(0);
+        var cellheader_mproducers = rowheader.insertCell(1);
+        // Add some bold text in the new cell:
+        cellheader_country.innerHTML = "<b>Country</b>"; 
+        cellheader_mproducers.innerHTML= "<b>Produced</b>"
+
     })]).then(function(loadData){
         let topo = loadData[0]
         console.log(topo)
