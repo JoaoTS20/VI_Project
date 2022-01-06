@@ -31,40 +31,105 @@ function draw(data){
     }
 
 
+    data_lists = []
+    for(var key in dataset){
+        for(var entry of dataset[key]){
+            data_lists.push([key,entry[0],entry[1]])
+        }
+    }
+    data_lists.sort(function(a, b){
+            if(a[1] == b[1]){
+                if(a[2] > b[2]){
+                    return 1
+                }
+                else{
+                    return -1
+                }
+            }
+            return a[1] - b[1]
+            }
+        )
+
+
+    // group the data: one array for each value of the X axis.
+    var sumstat = d3.group(data_lists, d => d[1]);
+
+    var mygroups = Array.from(Object.keys(dataset)) // list of group names
+    var mygroup = Array.from(mygroups.keys()) // list of group names
+    var stackedData = d3.stack()
+      .keys(mygroup)
+      .value(function(d, key){
+          console.log(d)
+          if(!(key in d[1])){
+            return 0
+          }
+        return d[1][key][2]
+      })
+      (sumstat)
+
+
     const x = d3.scaleLinear()
-    .domain([d3.min(dataset, d => d[0]), [d3.max(dataset, d => d[0])]])
+    .domain([d3.min(data_lists, d => d[1]), [d3.max(data_lists, d => d[1])]])
     .range([0,width ]);
 
     //scale stuff
     svg.append("g")
     .attr("transform", `translate(0,${height})`)
-    .call(d3.axisBottom(x));
+    .call(d3.axisBottom(x).ticks(5));
         
     // Add Y axis
     const y = d3.scaleLinear()
     .range([height,0])
-    .domain([0, d3.max(dataset, d => d[1])]);
+    .domain([0, d3.max(data_lists, d => d[2])]);
 
     svg.append("g")
     .call(d3.axisLeft(y));
+
+
+    // color palette
+    const color = d3.scaleOrdinal()
+    .domain(mygroups)
+    .range(d3.schemeSet2)
+
     
-    dataset.sort(function(a, b){return a[0] - b[0]});
-    console.log(dataset)
+    //dataset.sort(function(a, b){return a[0] - b[0]});
+    //console.log(dataset)
+
+
+    // Show the areas
+    svg
+        .selectAll("mylayers")
+        .data(stackedData)
+        .join("path")
+        .style("fill", function(d) { 
+            var name = mygroups[d.key] ;
+            console.log(name) 
+            return color(name); })
+        .attr("d", d3.area()
+            .x(function(d, i) {
+                return x(d.data[0]); })
+            .y0(function(d) { 
+                return y(d[0]); })
+            .y1(function(d) { 
+                return y(d[1]); })
+        )
+
+
     // Add the area
-    svg.append("path")
-      .datum(dataset)
-      .attr("fill", "#cce5df")
-      .attr("stroke", "#69b3a2")
-      .attr("stroke-width", 1.5)
-      .attr("d", d3.area()
-        .x(d => {
-            console.log(d)
-            return x(d[0])})
-        .y0(y(0))
-        .y1(d => {
-            //console.log(d[1] + " " + y(d[1]))    
-            return y(d[1])
-        })) 
+    // svg.append("path")
+    //   .datum(dataset)
+    //   .attr("fill", "#cce5df")
+    //   .attr("stroke", "#69b3a2")
+    //   .attr("stroke-width", 1.5)
+    //   .attr("d", d3.area()
+    //     .x(d => {
+    //         console.log(d)
+    //         return x(d[0])})
+    //     .y0(y(0))
+    //     .y1(d => {
+    //         //console.log(d[1] + " " + y(d[1]))    
+    //         return y(d[1])
+    //     })) 
 }
 
 function getLanguages(data){
@@ -73,9 +138,15 @@ function getLanguages(data){
     let lang_dict = {}
     for(let movie of data){
         let rel_date;
+
         //Assuming always YYYY-MM-DD format
         let split_res = movie.release_date.split("-")[0]
         if (split_res == []){
+            continue
+        }
+
+        //TODO:Take this out, for testing
+        if(!(movie.original_language == 'en' || movie.original_language == 'es' || movie.original_language == 'ru')){
             continue
         }
 
@@ -98,7 +169,7 @@ function getLanguages(data){
         }
     }
     //TODO:Testing only
-    return lang_dict['en']
+    return lang_dict
 
 }
 
