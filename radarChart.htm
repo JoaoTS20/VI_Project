@@ -11,8 +11,8 @@
 		<link href="imports/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet"> <!--load all styles -->
 
 		<!-- D3.js -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
-        <link rel="stylesheet" href="radarChart.css">
+		<script src="http://d3js.org/d3.v6.js"></script>
+		<link rel="stylesheet" href="radarChart.css">
 	</head>
 	<body>
         
@@ -49,7 +49,7 @@
 			////////////////////////////////////////////////////////////// 
 
 
-            d3.csv("newdataset.csv", function(data) {
+            d3.csv("dataset.csv").then(function(data) {
 				
 				var genres= new Set(['Action', 'TV Movie', 'Romance', 'Foreign', 'Comedy', 'Animation', 'Western', 'Drama', 'War', 'Family', 'Science Fiction', 'History', 'Adventure', 'Music', 'Thriller', 'Horror', 'Mystery', 'Fantasy', 'Documentary', 'Crime']);
 
@@ -83,8 +83,8 @@
 				//////////////////// Draw the Chart ////////////////////////// 
 				////////////////////////////////////////////////////////////// 
 
-				var color = d3.scale.ordinal()
-					.range(["#EDC951","#CC333F","#00A0B0"]);
+				var color = d3.scaleOrdinal()
+					.range(["#EDC951","#00A0B0"]);
 					
 				var radarChartOptions = {
 				w: width,
