@@ -15,19 +15,83 @@ const svg = d3.select(".div_d3")
 
 
 
+
+
+
+
+//Global var, might have languages or studio names
+let all_data = null
+let filterClasses = new Set(["en"])
+updateUIClassesSelected(filterClasses)
+
+
+
+var mode_select = document.getElementById("mode")
+
+mode_select.addEventListener('change', () => {
+    filterClasses.clear()
+    updateUIClassesSelected(filterClasses)
+    draw(null)
+})
+
+var button_add = document.getElementById("button_add")
+
+button_add.addEventListener('click',() => {
+    let input_add = document.getElementById("input_add")
+    let mode = document.getElementById("mode").value
+    let value = input_add.value
+    //TODO: Let me use country names, not isoCodes
+    filterClasses.add(value)
+    updateUIClassesSelected(filterClasses)
+    draw(null)
+})
+
+
+function updateUIClassesSelected(filterClasses){
+    let item_list = document.getElementById('item_list')
+    item_list.textContent = '';
+    for(let element of filterClasses){
+        let li = document.createElement('li')
+        li.classList = ["list-group-item"]
+        let div_text = document.createElement('div')
+        div_text.classList = ["inline-this"]
+        div_text.innerText = element
+        li.appendChild(div_text)
+
+        let icon = document.createElement('i')
+        icon.classList = ["fas fa-times-circle"]
+        
+        icon.addEventListener("click", () => {
+            filterClasses.delete(element)
+            updateUIClassesSelected(filterClasses)
+            draw(null)
+        })
+        li.appendChild(icon)
+        item_list.appendChild(li)
+    }
+}
+
+
 d3.csv("/newdataset.csv").then(draw);
 
 
 function draw(data){
+    //Clean up
+    document.querySelector("g").textContent = ''
+    //Save data or use previouslly loaded
+    if(data == null){
+        data = all_data
+    }
+    all_data = data
     console.log(data)
     let dataset = []
     let mode_chosen = document.getElementById("mode").value
     switch (mode_chosen) {
         case "lang":
-            dataset = getLanguages(data)
+            dataset = getLanguages(data,filterClasses)
             break;
         case "studios":
-            getStudios(data)
+            dataset = getStudios(data,filterClasses)
             break;
         default:
             break;
@@ -189,6 +253,7 @@ function draw(data){
         .style("fill", function(d){ 
             return color(d)})
         .text(function(d){
+            if(mode_chosen == 'studios') return d;
             let actualName = getLanguageName(d)
             return actualName})
         .attr("text-anchor", "left")
@@ -208,7 +273,7 @@ function getLanguageName(name){
 
 
 
-function getLanguages(data){
+function getLanguages(data,filterClasses){
     //Dictionary ru -> [year,count]
     //list for ru-> [year,count],[year,count],[year,count]
     let lang_dict = {}
@@ -221,9 +286,7 @@ function getLanguages(data){
             continue
         }
 
-        //TODO:Take this out, for testing
-        if(!(movie.original_language == 'en' || movie.original_language == 'es' || movie.original_language == 'ru'
-        || movie.original_language == 'it' || movie.original_language == 'fr')){
+        if(!(filterClasses.has(movie.original_language))){
             continue
         }
 
@@ -245,11 +308,61 @@ function getLanguages(data){
             count_pairs.push([rel_date,1]) 
         }
     }
-    //TODO:Testing only
+
     return lang_dict
 
 }
 
-function getStudios(data){
-    console.log(data)
+
+function containsAny(filterClasses, st){
+    for(var query of filterClasses.values()){
+        if(st.toLowerCase().includes(query)){
+            return true
+        }
+    }
+    return false
+}
+
+function getStudios(data,filterClasses){
+    //Dictionary pixar -> [year,count]
+    //list for pixar -> [year,count],[year,count],[year,count]
+    let studio_dict = {}
+    for(let movie of data){
+        let rel_date;
+
+        //Assuming always YYYY-MM-DD format
+        let split_res = movie.release_date.split("-")[0]
+        if (split_res == []){
+            continue
+        }
+
+        rel_date = parseInt(split_res)
+        let studios_string = movie.production_companies
+        studios_string = studios_string.replace(/[\[\]''\"\s]+/gm,"");
+        let studios = studios_string.split(",")
+
+        for(let st of studios){
+            if(!(containsAny(filterClasses,st))){
+                continue
+            }
+
+            if (!(st in studio_dict)){
+                studio_dict[st] = []
+            }
+            let count_pairs = studio_dict[st]
+            let date_flag = false
+            for(let i = 0; i < count_pairs.length; i++){
+                let pair = count_pairs[i]
+                if(pair[0] == rel_date){
+                    count_pairs[i][1]++
+                    date_flag = true
+                }
+            }
+            if(!date_flag){
+                count_pairs.push([rel_date,1]) 
+            }            
+        }
+    }
+
+    return studio_dict
 }

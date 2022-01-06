@@ -7,3 +7,6 @@
 .pad-container{
     padding: 5%;
 }
+.inline-this{
+    display: inline-block;
+}
