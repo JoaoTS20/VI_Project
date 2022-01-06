@@ -1,4 +1,4 @@
-import { isoLangs } from "./iso_langs.js";
+import { isoLangs,reverse_isoLangs } from "./iso_langs.js";
 
 
 const margin = {top: 10, right: 30, bottom: 40, left: 50},
@@ -41,6 +41,12 @@ button_add.addEventListener('click',() => {
     let mode = document.getElementById("mode").value
     let value = input_add.value
     //TODO: Let me use country names, not isoCodes
+    if(mode == 'lang'){
+        if(value in reverse_isoLangs){
+            value = reverse_isoLangs[value]
+        }
+    }
+
     filterClasses.add(value)
     updateUIClassesSelected(filterClasses)
     draw(null)
@@ -48,6 +54,9 @@ button_add.addEventListener('click',() => {
 
 
 function updateUIClassesSelected(filterClasses){
+    let mode = document.getElementById("mode").value
+
+
     let item_list = document.getElementById('item_list')
     item_list.textContent = '';
     for(let element of filterClasses){
@@ -55,7 +64,12 @@ function updateUIClassesSelected(filterClasses){
         li.classList = ["list-group-item"]
         let div_text = document.createElement('div')
         div_text.classList = ["inline-this"]
-        div_text.innerText = element
+        if(mode == 'lang'){
+            div_text.innerText = isoLangs[element]['name']
+        }
+        else{
+            div_text.innerText = element
+        }
         li.appendChild(div_text)
 
         let icon = document.createElement('i')
