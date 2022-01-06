@@ -1,4 +1,7 @@
-const margin = {top: 10, right: 30, bottom: 30, left: 50},
+import { isoLangs } from "./iso_langs.js";
+
+
+const margin = {top: 10, right: 30, bottom: 40, left: 50},
       width = 500 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom;
     
@@ -31,7 +34,7 @@ function draw(data){
     }
 
 
-    data_lists = []
+    let data_lists = []
     for(var key in dataset){
         for(var entry of dataset[key]){
             data_lists.push([key,entry[0],entry[1]])
@@ -92,8 +95,22 @@ function draw(data){
     .range(d3.schemeSet2)
 
     
-    //dataset.sort(function(a, b){return a[0] - b[0]});
-    //console.log(dataset)
+
+    // Add X axis label:
+    svg.append("text")
+        .attr("text-anchor", "end")
+        .attr("x", width)
+        .attr("y", height+35 )
+        .text("Time (year)");
+
+    // Add Y axis label:
+    svg.append("text")
+        .attr("text-anchor", "end")
+        .attr("x", 5)
+        .attr("y", 10 )
+        .text("# of movies made")
+        .attr("text-anchor", "start")
+
 
 
     // Show the areas
@@ -101,11 +118,15 @@ function draw(data){
         .selectAll("mylayers")
         .data(stackedData)
         .join("path")
-        .style("fill", function(d) { 
-            var name = mygroups[d.key] ;
+        .style("fill", function(d) {
+            //TODO: This might be very wrong
+            var name = mygroups[mygroups.length - d.key - 1] ;
             console.log(name) 
             return color(name); })
-        .attr("d", d3.area()
+            .attr("class", function(d) { 
+                return "myArea " + mygroups[d.key] 
+            })
+            .attr("d", d3.area()
             .x(function(d, i) {
                 return x(d.data[0]); })
             .y0(function(d) { 
@@ -115,22 +136,77 @@ function draw(data){
         )
 
 
-    // Add the area
-    // svg.append("path")
-    //   .datum(dataset)
-    //   .attr("fill", "#cce5df")
-    //   .attr("stroke", "#69b3a2")
-    //   .attr("stroke-width", 1.5)
-    //   .attr("d", d3.area()
-    //     .x(d => {
-    //         console.log(d)
-    //         return x(d[0])})
-    //     .y0(y(0))
-    //     .y1(d => {
-    //         //console.log(d[1] + " " + y(d[1]))    
-    //         return y(d[1])
-    //     })) 
+    //////////
+    // HIGHLIGHT GROUP //
+    //////////
+
+    // What to do when one group is hovered
+    var highlight = function(d){
+        console.log(d)
+        console.log(d.target.__data__)
+        let lang = d.target.__data__
+        let i  = mygroups.indexOf(lang)
+        
+        // reduce opacity of all groups
+        d3.selectAll(".myArea").style("opacity", .1)
+        // expect the one that is hovered
+        d3.select("."+mygroups[mygroups.length - 1 - i]).style("opacity", 1)
+      }
+  
+      // And when it is not hovered anymore
+      var noHighlight = function(d){
+        d3.selectAll(".myArea").style("opacity", 1)
+      }
+
+
+    //////////
+    // LEGEND //
+    //////////
+
+    // Add one dot in the legend for each name.
+    var size = 20
+    svg.selectAll("myrect")
+      .data(mygroups)
+      .enter()
+      .append("rect")
+        .attr("x", margin.left - 10)
+        .attr("y", function(d,i){ return margin.bottom + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("width", size)
+        .attr("height", size)
+        .style("fill", function(d){ 
+            return color(d)})
+        .on("mouseover", highlight)
+        .on("mouseleave", noHighlight)
+
+
+    // Add one dot in the legend for each name.
+    svg.selectAll("mylabels")
+      .data(mygroups)
+      .enter()
+      .append("text")
+        .attr("x", margin.left - 10 + size*1.2)
+        .attr("y", function(d,i){ return margin.bottom + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+        .style("fill", function(d){ 
+            return color(d)})
+        .text(function(d){
+            let actualName = getLanguageName(d)
+            return actualName})
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+        .on("mouseover", highlight)
+        .on("mouseleave", noHighlight)
+
 }
+
+function getLanguageName(name){
+    if(name in isoLangs){
+        return isoLangs[name].name
+    }
+    return name
+
+}
+
+
 
 function getLanguages(data){
     //Dictionary ru -> [year,count]
@@ -146,7 +222,8 @@ function getLanguages(data){
         }
 
         //TODO:Take this out, for testing
-        if(!(movie.original_language == 'en' || movie.original_language == 'es' || movie.original_language == 'ru')){
+        if(!(movie.original_language == 'en' || movie.original_language == 'es' || movie.original_language == 'ru'
+        || movie.original_language == 'it' || movie.original_language == 'fr')){
             continue
         }
 
@@ -155,10 +232,10 @@ function getLanguages(data){
         if (!(movie.original_language in lang_dict)){
             lang_dict[movie.original_language] = []
         }
-        count_pairs = lang_dict[movie.original_language]
-        date_flag = false
+        let count_pairs = lang_dict[movie.original_language]
+        let date_flag = false
         for(let i = 0; i < count_pairs.length; i++){
-            pair = count_pairs[i]
+            let pair = count_pairs[i]
             if(pair[0] == rel_date){
                 count_pairs[i][1]++
                 date_flag = true
