@@ -249,13 +249,14 @@ function draw(data){
       .enter()
       .append("text")
         .attr("x", margin.left - 10 + size*1.2)
-        .attr("y", function(d,i){ return margin.bottom + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("y", function(d,i){ return margin.bottom + i*(size+5) + (size/2)})
         .style("fill", function(d){ 
             return color(d)})
         .text(function(d){
-            if(mode_chosen == 'studios') return d;
+            if(mode_chosen == 'studios') return d.charAt(0).toUpperCase() + d.slice(1);
             let actualName = getLanguageName(d)
-            return actualName})
+            return actualName.charAt(0).toUpperCase() + actualName.slice(1);
+        })
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
         .on("mouseover", highlight)
@@ -317,10 +318,10 @@ function getLanguages(data,filterClasses){
 function containsAny(filterClasses, st){
     for(var query of filterClasses.values()){
         if(st.toLowerCase().includes(query)){
-            return true
+            return query
         }
     }
-    return false
+    return null
 }
 
 function getStudios(data,filterClasses){
@@ -342,14 +343,17 @@ function getStudios(data,filterClasses){
         let studios = studios_string.split(",")
 
         for(let st of studios){
-            if(!(containsAny(filterClasses,st))){
+            let res = containsAny(filterClasses,st)
+            if(res == null){
                 continue
             }
 
-            if (!(st in studio_dict)){
-                studio_dict[st] = []
+            if (!(res in studio_dict)){
+                studio_dict[res] = []
             }
-            let count_pairs = studio_dict[st]
+            
+            //We are going to use the query instead of the studio name
+            let count_pairs = studio_dict[res]
             let date_flag = false
             for(let i = 0; i < count_pairs.length; i++){
                 let pair = count_pairs[i]
