@@ -57,7 +57,7 @@
     let data = new Map();
     let table=document.getElementById( 'table_producers' );
     const countOccurrences = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
-    d3.csv("dataset.csv").then(function(d) {
+    d3.csv("newdataset.csv").then(function(d) {
         countries=[]
         d.forEach(element => {eval(element.production_countries).forEach(cou => {countries.push(cou)})});
         cout_set=new Set(countries)
