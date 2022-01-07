@@ -21,7 +21,7 @@
     </div>
     <script>
         // set the dimensions and margins of the graph
-        const margin = {top: 10, right: 30, bottom: 30, left: 100},
+        const margin = {top: 10, right: 30, bottom: 40, left: 100},
             width = 500 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
         const tooltip = d3.select("#divtooltip")
@@ -40,6 +40,9 @@
             .append("g")
                 .attr("transform",
                     `translate(${margin.left}, ${margin.top})`);
+        
+
+        
         //Read the data
         d3.csv("dataset.csv").then( function(data) {
           // Add X axis
@@ -58,6 +61,20 @@
               .call(d3.axisLeft(y));
           
           generateGraph(data,svg,x,y,xAxis,yAxis)
+            // X axis label:
+            svg.append("text")
+                .attr("text-anchor", "end")
+                .attr("x", width/2 + margin.left -25)
+                .attr("y", height + margin.top + 25)
+                .text("Popularity Score");
+
+            // Y axis label:
+            svg.append("text")
+                .attr("text-anchor", "end")
+                .attr("transform", "rotate(-90)")
+                .attr("y", -margin.left + 20)
+                .attr("x", -margin.top - height/2 + 20)
+                .text("Budget")
 
             d3.select("button").on("click", function() {
                 studio = d3.select("#txtStudio").node().value;
@@ -107,6 +124,8 @@
           .duration(200)
           .style("opacity", 0)
       }
+
+      
       // Add dots
       svg.append('g')
           .selectAll("dot")
