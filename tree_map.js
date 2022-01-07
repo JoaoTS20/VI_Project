@@ -149,18 +149,26 @@ var highlight = function(d){
     tool.style("top", dims.top + lang.y0 - 10 + "px")
     tool.style("display", "inline-block")
     tool.style("opacity", 1)
+    let tooltipText = ""
     if(data_processed != null){
-        tool.html(d.children ? null : "Revenue:"+formatNumber(data_processed[lang.id].oldValue.toString())+"$");
+        tooltipText = "Revenue:"+formatNumber(data_processed[lang.id].oldValue.toString())+"$"
     }
     else{
-        tool.html(d.children ? null : "Revenue:"+lang.value+"$");
+        tooltipText =  "Revenue:"+lang.value+"$"
+
+    }
+    tool.html(d.children ? null :tooltipText);
+    if(mode != null && mode == 'languages'){
+        tool.append("p").html("Click to filter by language")
     }
 }
 
 function formatNumber(number){
-    for(let i = 3; i < number.length; i+=4){
-        number = number.substr(0, i) + ' ' + number.substr(i);
+
+    for(let i = number.length; i > 0; i-=3){
+        number = number.substr(0, i) + ' ' + number.substr(i,number.length);
     }
+
     return number
 }
 
