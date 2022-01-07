@@ -41,7 +41,7 @@
                 .attr("transform",
                     `translate(${margin.left}, ${margin.top})`);
         //Read the data
-        d3.csv("newdataset.csv").then( function(data) {
+        d3.csv("dataset.csv").then( function(data) {
           // Add X axis
           var x = d3.scaleLinear()
               .domain([0, d3.max(data, function(d){ return (parseFloat(d.popularity))})])
@@ -115,10 +115,10 @@
           .append("circle")
           .attr("cx", function (d) { return x(parseFloat(d.popularity)); } )
           .attr("cy", function (d) { return y(parseFloat(d.budget) ); } )
-          .attr("r", 1.5)
+          .attr("r", 3,5)
           .style("fill", "red")
-          //.style("opacity", 0.3)
-          //.style("stroke", "white")
+          .style("opacity", 0.3)
+          .style("stroke", "white")
           .on("mouseover", mouseover )
           .on("mousemove", mousemove )
           .on("mouseleave", mouseleave )
