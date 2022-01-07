@@ -66,29 +66,38 @@ function processData(data,mode){
     lang_arr.sort((a,b) => a.value - b.value)
 
     //This is done to filter out squares with very low revenue
+    //Get put in 'Others' square
+    let other_value = 0
+    let sum_of_all = d3.sum(lang_arr, d => d.value)
     if(mode == 'genders'){
-        let sum_of_all = d3.sum(lang_arr, d => d.value)
         lang_arr = lang_arr.filter((el,index,arr) => {
             if(el.value/sum_of_all < 0.03){
+                other_value+=el.value
                 return false
             }
             return true
         })
+        if(other_value/sum_of_all > 0.05){
+            lang_arr.push({name: 'Others', parent: 'root', value: other_value, oldValue: other_value})
+            lang_dict['Others'] = {name: 'Others', parent: 'root', value: other_value, oldValue: other_value}
+        }
     }
     else{
-        let sum_of_all = d3.sum(lang_arr, d => d.value)
         lang_arr = lang_arr.filter((el,index,arr) => {
             if(el.value/sum_of_all < 0.001){
+                other_value+=el.value
                 return false
             }
             return true
         })
+        lang_arr.push({name: 'Others', parent: 'root', value: other_value, oldValue: other_value})
+        lang_dict['Others'] = {name: 'Others', parent: 'root', value: other_value, oldValue: other_value}
     }
 
 
     //Smaller exponent to change square size
     let valueScale = d3.scalePow()
-        .exponent(1/6)
+        .exponent(1/4)
         .domain([0, d3.max(lang_arr, d => d.value)])
         .range([0, 1000]);
     for(var i = 0; i < lang_arr.length; i++){
@@ -164,6 +173,9 @@ var noHighlight = function(d){
 var transition = function(d){
     //if mode == langs change to genders and redraw
     if(mode == 'languages'){
+        if((d.target.__data__.id.toLowerCase()) == "others"){
+            return
+        }
         //Small animation, obscure svg and then animate opacity
         d3.select(".div_d3")
         .style("opacity", "0")
