@@ -20,13 +20,22 @@
 		<div class="container">
 			<div class="radarChart"></div>
 			<div class="filters">
-				<label for="exampleFormControlTextarea1" class="form-label">Search Director:</label>
+				
+				<label for="exampleFormControlTextarea1" class="form-label">Search Director 1:</label>
 				<!--input id="txtStudio" name="txt-Name" class="form-control me-2" type="search" placeholder="Director Name" aria-label="Search"-->
-				<select name="directores" id="directores">
-					<option id="selectdirector">-----</option>
+				<select name="directores1" id="directores1">
+					<option  selected="selected" id="selectdirector1">-----</option>
 				</select>
-				<p><b id="directorName"></b></p>
-				<p id="directornumber" ></p>
+				<p><b id="directorName1"></b></p>
+				<p id="directornumber1" ></p>
+				
+				<label for="exampleFormControlTextarea1" class="form-label">Search Director 2:</label>
+				<select name="directores2" id="directores2">
+					<option selected="selected" id="selectdirector2">-----</option>
+				</select>
+				<p><b id="directorName2"></b></p>
+				<p id="directornumber2" ></p>
+				
 				<!--button id="btsearch" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button-->
 			</div>
 			
@@ -50,8 +59,11 @@
 
 
             d3.csv("dataset.csv").then(function(data) {
+
+				var_data_director1=[]
+				var_data_director2=[]
 				
-				var genres= new Set(['Action', 'TV Movie', 'Romance', 'Foreign', 'Comedy', 'Animation', 'Western', 'Drama', 'War', 'Family', 'Science Fiction', 'History', 'Adventure', 'Music', 'Thriller', 'Horror', 'Mystery', 'Fantasy', 'Documentary', 'Crime']);
+				var default_genres= new Set(['Action', 'TV Movie', 'Romance', 'Foreign', 'Comedy', 'Animation', 'Western', 'Drama', 'War', 'Family', 'Science Fiction', 'History', 'Adventure', 'Music', 'Thriller', 'Horror', 'Mystery', 'Fantasy', 'Documentary', 'Crime']);
 
 				//Create array of options to be added
 				var arrayDirectorOptions = [];
@@ -60,25 +72,39 @@
 				});
 				console.log(arrayDirectorOptions)
 				
-				var directorname=document.getElementById("directorName");
+				var directorname1=document.getElementById("directorName1");
+				var directorname2=document.getElementById("directorName2");
 
-				var directornumber=document.getElementById("directornumber");
+				var directornumber1=document.getElementById("directornumber1");
+				var directornumber2=document.getElementById("directornumber2");
 				
 				//Create and append select list
-				var selectList = document.getElementById("directores");
+				var selectList1 = document.getElementById("directores1");
+				var selectList2 = document.getElementById("directores2");
 
 				//Create and append the options
 				new Set(arrayDirectorOptions.sort()).forEach( element => {
 					var option = document.createElement("option");
 					option.value = element;
 					option.text = element;
-					selectList.appendChild(option);
+					selectList1.appendChild(option);
+					
 				});
-				
+
+				//Create and append the options
+				new Set(arrayDirectorOptions.sort()).forEach( element => {
+					var option = document.createElement("option");
+					option.value = element;
+					option.text = element;
+					selectList2.appendChild(option);
+					
+				});
+
 				//Default Values
 				default_data=[]
-				genres.forEach(element => {default_data.push({axis:element,value:0})});
-
+				default_genres.forEach(element => {default_data.push({axis:element,value:0})});
+				default_genres.forEach(element => {var_data_director1.push({axis:element,value:0})});
+				default_genres.forEach(element => {var_data_director2.push({axis:element,value:0})});
 				////////////////////////////////////////////////////////////// 
 				//////////////////// Draw the Chart ////////////////////////// 
 				////////////////////////////////////////////////////////////// 
@@ -95,32 +121,98 @@
 				roundStrokes: true,
 				color: color
 				};
-				
 				//Call function to draw the Radar chart
-				RadarChart(".radarChart", [default_data], radarChartOptions);
+				RadarChart(".radarChart", [var_data_director1,var_data_director2], radarChartOptions);
 				
-				d3.select("#directores").on("change", change)
-					function change() {
-						director=this.options[this.selectedIndex].value
-						if(director=="-----"){
-							
-							RadarChart(".radarChart", [default_data], radarChartOptions);
-							directorname.innerHTML='<i class="fas fa-video"></i>'
-							directornumber.innerHTML='<i class="fas fa-film"></i>'
+				d3.select("#directores1").on("change", change1)
+					function change1() {
+						console.log("directores1")
+						director1=this.options[this.selectedIndex].value
+						director2=selectList2.value
+						console.log(director2)
+						if(director1=="-----"){
+							var_data_director1=default_data
+							if(director2=="-----"){
+								RadarChart(".radarChart", [var_data_director1,var_data_director2], radarChartOptions);
+							}
+							else{
+								var_data_director2=var_data_director2.filter(function (element) { return element.value != 0});
+								RadarChart(".radarChart", [var_data_director2], radarChartOptions);
+							}
+							directorname1.innerHTML='<i class="fas fa-video"></i>'
+							directornumber1.innerHTML='<i class="fas fa-film"></i>'
 						}
 						else{
-							console.log(director)
-							newData = data.filter(function(d){ return eval(d.director).includes(director)})
+							console.log(director1)
+							newData = data.filter(function(d){ return eval(d.director).includes(director1)})
 							console.log(newData)
-							genres.clear()
-							newData.forEach(element =>{eval(element["genres"]).forEach(gen =>{genres.add(gen)})});
+							if (director2=="-----"){
+								genres= new Set()
+								newData.forEach(element =>{eval(element["genres"]).forEach(gen =>{genres.add(gen)})})
+							}
+							else{
+								genres=default_genres
+							}
 							console.log(genres)
 							new_data_to_graph=[]
 							genres.forEach(element => {new_data_to_graph.push({axis:element,value: newData.filter(function(d){return eval(d.genres).includes(element)}).length/newData.length})});
 							console.log(new_data_to_graph)
-							RadarChart(".radarChart", [new_data_to_graph], radarChartOptions);
-							directorname.innerHTML='<i class="fas fa-video"></i> '+ director
-							directornumber.innerHTML='<i class="fas fa-film"></i>'+" Directed "+newData.length+" Movies"
+							var_data_director1=new_data_to_graph
+							if (director2=="-----"){
+								RadarChart(".radarChart", [var_data_director1], radarChartOptions);
+							}
+							else{
+								RadarChart(".radarChart", [var_data_director1,var_data_director2], radarChartOptions);
+
+							}
+							directorname1.innerHTML='<i class="fas fa-video"></i> '+ director1
+							directornumber1.innerHTML='<i class="fas fa-film"></i>'+" Directed "+newData.length+" Movies"
+						}
+					}
+		
+				d3.select("#directores2").on("change", change2)
+					function change2() {
+						console.log("directores2")
+						director2=this.options[this.selectedIndex].value
+						director1=selectList1.value
+						console.log(director1)
+						if(director2=="-----"){
+							var_data_director2=default_data
+							if(director1=="-----"){
+								RadarChart(".radarChart", [var_data_director1,var_data_director2], radarChartOptions);
+							}
+							else{
+								var_data_director1=var_data_director1.filter(function (element) { return element.value != 0});
+								RadarChart(".radarChart", [var_data_director1], radarChartOptions);
+							}
+							directorname2.innerHTML='<i class="fas fa-video"></i>'
+							directornumber2.innerHTML='<i class="fas fa-film"></i>'
+						}
+						else{
+							console.log(director2)
+							newData = data.filter(function(d){ return eval(d.director).includes(director2)})
+							console.log(newData)
+							if (director1=="-----"){
+								genres= new Set()
+								newData.forEach(element =>{eval(element["genres"]).forEach(gen =>{genres.add(gen)})})
+							}
+							else{
+								genres=default_genres
+							}
+							console.log(genres)
+							new_data_to_graph=[]
+							genres.forEach(element => {new_data_to_graph.push({axis:element,value: newData.filter(function(d){return eval(d.genres).includes(element)}).length/newData.length})});
+							console.log(new_data_to_graph)
+							var_data_director2=new_data_to_graph
+							if (director1=="-----"){
+								RadarChart(".radarChart", [var_data_director2], radarChartOptions);
+							}
+							else{
+								RadarChart(".radarChart", [var_data_director2,var_data_director1], radarChartOptions);
+
+							}
+							directorname2.innerHTML='<i class="fas fa-video"></i> '+ director2
+							directornumber2.innerHTML='<i class="fas fa-film"></i>'+" Directed "+newData.length+" Movies"
 						}
 					}
         });
