@@ -319,30 +319,10 @@ function draw(data){
     .selectAll("line")
     .data(data.links)
     .enter().append("line")
-    .style("stroke", "#aaa")
+    .style("stroke", "#888")
     .attr("marker-end", d => 'url(#triangle)');
 
 
-
-    // var link = svg
-    // .selectAll("line")
-    // .data(data.links)
-    // .enter()
-    // .append("line")
-    //     .style("stroke", "#aaa")
-
-
-    
-    // Initialize the nodes
-    // var node = svg
-    // .selectAll("circle")
-    // .data(data.nodes)
-    // .enter()
-    // .append("circle")
-    //     .attr("r", 20)
-    //     .style("fill", function(d){
-    //         return color(d.name)
-    //     })
 
     var node = svg.append("g")
     .attr("class", "nodes")
@@ -355,7 +335,6 @@ function draw(data){
         return "node"+d.id 
     })
 
-    //<image href="camera-video.svg" height="25" width="25" y="-11" x="-11"></image>
     var circles = node.append("circle")
     .attr("r", function(d){
         return d.type == 'movie' ?  20 : 30;
