@@ -32,7 +32,7 @@ d3version3.csv("newdataset.csv", function(data) {
         'Fantasy', 
         'Documentary', 
         'Crime'
-    ]);
+    ].sort());
 
     //Create array of options to be added
     var arrayDirectorOptions = [];
@@ -120,8 +120,8 @@ d3version3.csv("newdataset.csv", function(data) {
             }
             else if(director1!="-----" && director2!="-----"){
 
-                //Use Default Genres
-                genres=default_genres
+                ////Clear Genres
+                genres=[]
 
                 newData1 = data.filter(function(d){ 
                     return eval(d.director).includes(director1)
@@ -130,6 +130,22 @@ d3version3.csv("newdataset.csv", function(data) {
                 newData2 = data.filter(function(d){ 
                     return eval(d.director).includes(director2)
                 });
+
+                //Add Genres from Director 1
+                newData1.forEach(element =>{
+                    eval(element["genres"]).forEach(gen =>{
+                        genres.push(gen)
+                    })
+                });
+
+                //Add Genres from Director 2
+                newData2.forEach(element =>{
+                    eval(element["genres"]).forEach(gen =>{
+                        genres.push(gen)
+                    })
+                });
+
+                genres=new Set(genres.sort())
 
                 //Clear Data
                 var_data_director1=[]
@@ -159,19 +175,20 @@ d3version3.csv("newdataset.csv", function(data) {
             else if(director1=="-----" && director2!="-----"){
                 
                 //Clear Genres
-                genres= new Set()
+                genres= []
                 
                 newData = data.filter(function(d){ 
                     return eval(d.director).includes(director2)
                 });
 
-                newData.forEach(element =>{e
-                    val(element["genres"]).forEach(gen =>{
-                        genres.add(gen)
+                newData.forEach(element =>{
+                    eval(element["genres"]).forEach(gen =>{
+                        genres.push(gen)
                     })
                 });
 
-                
+                genres= new Set(genres.sort())
+
                 var_data_director2=[]
 
                 genres.forEach(element => {
@@ -192,7 +209,7 @@ d3version3.csv("newdataset.csv", function(data) {
             else if(director1!="-----" && director2=="-----"){
                 
                 //Clear Genres
-                genres= new Set()
+                genres= []
                 
                 newData = data.filter(function(d){ 
                     return eval(d.director).includes(director1)
@@ -200,9 +217,11 @@ d3version3.csv("newdataset.csv", function(data) {
                 
                 newData.forEach(element =>{
                     eval(element["genres"]).forEach(gen =>{
-                        genres.add(gen)
+                        genres.push(gen)
                     })
                 });
+
+                genres= new Set(genres.sort())
 
                 //Clear Data
                 var_data_director1=[]
@@ -248,8 +267,8 @@ d3version3.csv("newdataset.csv", function(data) {
             }
             else if(director1!="-----" && director2!="-----"){
 
-                //Use Default Genres
-                genres=default_genres
+                //Clear Genres
+                genres=[]
 
                 newData1 = data.filter(function(d){ 
                     return eval(d.director).includes(director1)
@@ -258,6 +277,23 @@ d3version3.csv("newdataset.csv", function(data) {
                 newData2 = data.filter(function(d){ 
                     return eval(d.director).includes(director2)
                 });
+
+
+                //Add Genres from Director 1
+                newData1.forEach(element =>{
+                    eval(element["genres"]).forEach(gen =>{
+                        genres.push(gen)
+                    })
+                });
+
+                //Add Genres from Director 2
+                newData2.forEach(element =>{
+                    eval(element["genres"]).forEach(gen =>{
+                        genres.push(gen)
+                    })
+                });
+
+                genres=new Set(genres.sort())
 
                 var_data_director1=[]
                 var_data_director2=[]
@@ -285,7 +321,7 @@ d3version3.csv("newdataset.csv", function(data) {
             else if(director1=="-----" && director2!="-----"){
 
                 //Clear Genres
-                genres= new Set()
+                genres= []
 
                 newData = data.filter(function(d){ 
                     return eval(d.director).includes(director2)
@@ -293,9 +329,11 @@ d3version3.csv("newdataset.csv", function(data) {
 
                 newData.forEach(element =>{
                     eval(element["genres"]).forEach(gen =>{
-                        genres.add(gen)
+                        genres.push(gen)
                     })
                 });
+
+                genres= new Set(genres.sort())
 
                 var_data_director2=[]
                 
@@ -318,16 +356,19 @@ d3version3.csv("newdataset.csv", function(data) {
             else if(director1!="-----" && director2=="-----"){
 
                 //Clear Genres
-                genres= new Set()
+                genres= []
 
                 newData = data.filter(function(d){ 
                     return eval(d.director).includes(director1)
                 });
 
                 newData.forEach(element =>{
-                    eval(element["genres"]).forEach(gen =>{genres.add(gen)
+                    eval(element["genres"]).forEach(gen =>{
+                        genres.push(gen)
                     })
                 });
+
+                genres= new Set(genres.sort())
 
                 //Clear Data
                 var_data_director1=[]
