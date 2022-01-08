@@ -17,8 +17,13 @@ const svg = d3.select(".div_d3")
 d3.csv("/newdataset.csv").then(draw);
 
 
-let all_data = null
-let studiosFilter = null
+let data_cache = null
+let studiosFilter = new Set(["Pixar Animation Studios"])
+let autocomplete = new Set([]) 
+
+
+d3.select("#button_add")
+   .on("click", addStudio);
 
 
 
@@ -31,13 +36,35 @@ var simulation = d3.forceSimulation()                 // Force algorithm is appl
     .force("center", d3.forceCenter(width / 2, height / 2))     // This force attracts nodes to the center of the svg area
 
 
+//Handle zoom
+function handleZoom(e) {
+    d3.select('svg g')
+      .attr('transform', e.transform);
+  }
+  
+let zoom = d3.zoom()
+.on('zoom', handleZoom);
+
+d3.select('svg')
+.call(zoom);
+
+
+
+function addStudio(){
+    let query = document.getElementById("input_add").value.toLowerCase().trim() 
+    studiosFilter.add(query)
+    simulation = null
+    draw(null)
+}
+
+
 function anyContains(studios,studiosFilter){
     for(let studio of studios){
-        studio = studio.toLowerCase()
-        for(let filter of studiosFilter){
-            filter = filter.toLowerCase()
-            if(studio.includes(filter)){
-                return true
+        studio = studio.toLowerCase().trim().replace(/\s/g, '');
+            for(let filter of studiosFilter){
+                filter = filter.toLowerCase().trim().replace(/\s/g, '');
+                if(studio == filter){
+                    return true
             }
         }
     }
@@ -55,8 +82,73 @@ function formatStudioString(studios){
     }
     return studios
 }
+
+function capitalizeStudioString(studioName){
+    let new_studio_name = ''
+    let cap_next = false
+    for(let i = 0; i < studioName.length; i++){
+        let current_char = studioName[i]
+        if(i == 0 || cap_next){
+            current_char = current_char.toUpperCase()
+            cap_next = false
+        }
+        if(current_char == ' '){
+            cap_next = true
+        }
+        new_studio_name+=current_char
+    }
+    return new_studio_name
+}
+
+function updateUI(studio_names,original_films){
+    let item_list = document.getElementById('item_list')
+    item_list.textContent = '';
+    // if(studio_names.length == 0 && original_films.length > 0){
+    //     let div = document.createElement('div')
+    //     div.innerText = "No common films between studios detected for studios "
+    //     for(let film in original_films){
+    //         div.innerText+= (film + " ")
+    //     }
+    //     item_list.appendChild(div)
+    //     console.log(original_films)
+    // }
+   if(autocomplete.size > 0){
+        let sugestion_str = ''
+        for(let sugestion of autocomplete){
+            sugestion_str += (sugestion) + ','
+            if(sugestion_str.length > 150){
+                break
+            }
+        }
+        
+        document.getElementById("autocomplete").innerText ="Sugestions:"+sugestion_str.substring(0,sugestion_str.length-1) 
+   }
+    studio_names = formatStudioString(studio_names)
+    for(let element of studio_names){
+        let li = document.createElement('li')
+        li.classList = ["list-group-item"]
+        let div_text = document.createElement('div')
+        div_text.classList = ["inline-this"]
+        div_text.innerText = capitalizeStudioString(element)
+
+        li.appendChild(div_text)
+
+        let icon = document.createElement('i')
+        icon.classList = ["fas fa-times-circle"]
+        
+        icon.addEventListener("click", () => {
+            studiosFilter.delete(element)
+            updateUI(studiosFilter,original_films)
+            draw(null)
+        })
+        li.appendChild(icon)
+        item_list.appendChild(li)
+    }
+}
+
 function processData(data,studiosFilter,maxMovies){
     let id = 0
+    autocomplete = new Set([])
     let res = {}
     let entities = {}
     let links_arr = []
@@ -68,15 +160,29 @@ function processData(data,studiosFilter,maxMovies){
         let studios = studios_string.split(",")
         studios = formatStudioString(studios)
 
+
+        for(let studio of studios){
+            //If studio included in filter save that value
+            for(let filter of studiosFilter){
+                let st_name = studio.toLowerCase().trim().replace(/\s/g, '')
+                filter = filter.toLowerCase().trim().replace(/\s/g, '')
+                if(st_name.includes(filter) && st_name != filter){
+                    autocomplete.add(studio)
+                }
+            }
+        }
+
         if (!(anyContains(studios,studiosFilter))){
             continue
         }
-        let dic_len = Object.values(entities).filter((el,index,arr) => {
-            return el.type == 'movie'
-        }).length
-        if(dic_len >= maxMovies){
-            break
-        }
+
+        //If movie is for all studios in filter
+        // let dic_len = Object.values(entities).filter((el,index,arr) => {
+        //     return el.type == 'movie'
+        // }).length
+        // if(dic_len >= maxMovies){
+        //     break
+        // }
 
         if(!(movie_name in entities)){
             entities[movie_name] = {id: id, type:'movie'}
@@ -107,16 +213,26 @@ function processData(data,studiosFilter,maxMovies){
 
 function draw(data){
     //Clean up
+    if(simulation == null){
+        simulation = d3.forceSimulation()                 // Force algorithm is applied to data.nodes
+        .force("link", d3.forceLink()                               // This force provides links between nodes
+            .id(function(d) { return d.id; })                     // This provide  the id of a node
+        )
+        .force("charge", d3.forceManyBody().strength(-800))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+        .force("center", d3.forceCenter(width / 2, height / 2))     // This force attracts nodes to the center of the svg area
+    }
     document.querySelector("g").textContent = ''
     //Save data or use previouslly loaded
     if(data == null){
-        data = all_data
+        data = data_cache
     }
-    all_data = data
-
-    studiosFilter = ["pixar"]
+    data_cache = data
     let maxMovies = 10
     data = processData(data,studiosFilter,maxMovies)
+
+    let oldFilter = studiosFilter
+    //studiosFilter = new Set(studio_names)
+    updateUI(studiosFilter,oldFilter)
 
     let mygroups = []
     for(let node of data.nodes){
@@ -255,5 +371,4 @@ function draw(data){
         d.fx = null;
         d.fy = null;
       }
-
-}
+    }
