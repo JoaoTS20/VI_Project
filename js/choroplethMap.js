@@ -1,4 +1,6 @@
 //Based of: https://www.d3-graph-gallery.com/graph/choropleth_basic.html Yan Holtz's
+//World.geojson adapted from: https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson Yan Holtz's
+
 
 // Data and color scale
 let data = new Map();
