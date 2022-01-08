@@ -21,7 +21,12 @@
 
         <!-- D3v3.js -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
-		
+        <script>
+            d3version3 = d3
+            window.d3 = null
+          </script>
+        <!-- D3v6.js -->
+		<script src="https://d3js.org/d3.v6.js"></script>
         <!--css Spider Chart-->
         <link rel="stylesheet" href="css/radarChart.css">
     
