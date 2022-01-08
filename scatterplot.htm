@@ -11,8 +11,8 @@
 
     <div class="container">
         <h2>Budget By Popularity in Movies</h2>
-        <div class="graph" id="my_dataviz"></div>
-        <div id="divtooltip"></div>
+        <div class="graph" id="scatterplot_movies_budget"></div>
+        <div id="divtooltip_scatterplot_movies_budget"></div>
         <div class="filters">
             <label for="exampleFormControlTextarea1" class="form-label">Filter By Studio</label>
             <input id="txtStudio" name="txt-Name" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -24,7 +24,7 @@
         const margin = {top: 10, right: 30, bottom: 40, left: 100},
             width = 500 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
-        const tooltip = d3.select("#divtooltip")
+        const tooltip = d3.select("#divtooltip_scatterplot_movies_budget")
           .style("opacity", 0)
           .attr("class", "tooltip")
           .style("background-color", "white")
@@ -33,7 +33,7 @@
           .style("border-radius", "5px")
           .style("padding", "10px")
                   // append the svg object to the body of the page
-        let svg = d3.select("#my_dataviz")
+        let svg = d3.select("#scatterplot_movies_budget")
             .append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
@@ -44,7 +44,7 @@
 
         
         //Read the data
-        d3.csv("dataset.csv").then( function(data) {
+        d3.csv("newdataset.csv").then( function(data) {
           // Add X axis
           var x = d3.scaleLinear()
               .domain([0, d3.max(data, function(d){ return (parseFloat(d.popularity))})])
