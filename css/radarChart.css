@@ -1,0 +1,32 @@
+.legend {
+    font-family: 'Raleway', sans-serif;
+    fill: #333333;
+}
+.spiderchart {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    fill: #242424;
+    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff;
+    cursor: default;
+}
+.tooltip {
+    fill: #333333;
+}
+
+.box {
+    float: right;
+    height: 20px;
+    width: 20px;
+    margin-bottom: 15px;
+    border: 1px solid black;
+    clear: both;
+  }
+  
+  .yellow {
+    background-color: #EDC951;
+  }
+  
+  .blue {
+    background-color: #00A0B0;
+  }
