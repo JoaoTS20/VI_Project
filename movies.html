@@ -5,6 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
+        <script src="https://d3js.org/d3.v6.min.js"></script>
+
+        
+        
         <title>Cinema-Goers</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
@@ -30,70 +34,39 @@
         </nav>
         <!-- Graph content-->
         <div class="container">
-            <h2 style="padding-top: 20px;" align="center" >Determinado Gráfico</h2>
+            <h2 style="padding-top: 20px;" align="center" >ScatterPlot - Budget By Popularity in Movies</h2>
             <hr>
             <!-- Graph Explanation-->
             <div class="card mb-4">
-                <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
+                <div class="card-body">
+                    <p>The Scatterplot displays the relationship between the <i>Budget</i> of a Movie and the <i>Popularity Score</i> of a Movie. For each data point (Movie), the value of its <i>Popularity Score</i> is represented on the <b>X axis</b>, the <i>Budget</i> on the <b>Y axis</b>.</p>
+                    <p>It is possible to filter by <i>Production Company</i> so that only Movie points from the searched <i>Production Company</i> appear. To reset, search by nothing (empthy search bar).</p>                    
+                </div>
             </div>
             <div class="row">
                 <!-- Graph Entry-->
                 <div class="col-lg-8">
                     <!-- Featured blog post-->
-                    <div class="card mb-4">
-                        <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
-                        <div class="card-body">
-                            <div class="small text-muted">January 1, 2021</div>
-                            <h2 class="card-title">Featured Post Title</h2>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus possimus, veniam magni quis!</p>
-                            <a class="btn btn-primary" href="#!">Read more →</a>
-                        </div>
-                    </div>
+                        <div class="graph" id="scatterplot_movies_budget"></div>
+                        <div id="divtooltip_scatterplot_movies_budget"></div>   
                 </div>
                 <!-- Graph Settings-->
                 <div class="col-lg-4">
-
                     <!-- Search widget-->
                     <div class="card mb-4">
-                        <div class="card-header">Search</div>
+                        <div class="card-header">Filter By Production Company</div>
                         <div class="card-body">
                             <div class="input-group">
-                                <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
-                                <button class="btn btn-primary" id="button-search" type="button">Go!</button>
+                                <input class="form-control"  id="txtStudio" name="txt-Name" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+                                <button id="btsearch" type="submit" class="btn btn-primary" id="button-search" type="button">Search</button>
                             </div>
                         </div>
-                    </div>
-                    <!-- Categories widget-->
-                    <div class="card mb-4">
-                        <div class="card-header">Categories</div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">Web Design</a></li>
-                                        <li><a href="#!">HTML</a></li>
-                                        <li><a href="#!">Freebies</a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-sm-6">
-                                    <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">JavaScript</a></li>
-                                        <li><a href="#!">CSS</a></li>
-                                        <li><a href="#!">Tutorials</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Side widget-->
-                    <div class="card mb-4">
-                        <div class="card-header">Side Widget</div>
-                        <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
-                    </div>
-                
+                    </div>      
                 </div>
             </div>
         </div>
+        <!--End Graph ScatterPlot-->
+
         <!-- Graph content-->
         <div class="container">
             <h2 style="padding-top: 20px;" align="center" >Determinado Gráfico</h2>
@@ -166,6 +139,9 @@
         <footer class="py-2 bg-dark">
             <div class="container"><p class="m-0 text-center text-white">UA MEI 2021/2022 - Pedro Silva (93011) & João Soares (93078)</p></div>
         </footer>
+        <!--Script ScatterPlot-->
+        <script src="js/scatterplot.js"></script>
+
 
         <!-- Bootstrap core JS-->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
