@@ -13,3 +13,20 @@
 .tooltip {
     fill: #333333;
 }
+
+.box {
+    float: right;
+    height: 20px;
+    width: 20px;
+    margin-bottom: 15px;
+    border: 1px solid black;
+    clear: both;
+  }
+  
+  .yellow {
+    background-color: #EDC951;
+  }
+  
+  .blue {
+    background-color: #00A0B0;
+  }
