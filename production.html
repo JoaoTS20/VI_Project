@@ -8,6 +8,7 @@
         <title>Cinema-Goers</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <script src="http://d3js.org/d3.v6.js"></script>
         <!-- Core theme CSS (includes Bootstrap)-->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     </head>
@@ -20,80 +21,61 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/movies.html">Movies</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/movies.html">Movies</a></li>
                         <li class="nav-item"><a class="nav-link" href="/directores.html">Directores</a></li>
-                        <li class="nav-item"><a class="nav-link active" href="/production.html">Production</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/production.html">Production</a></li>
                         <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
-        <!-- Graph content-->
+        <!--Choropleth map-->
         <div class="container">
-            <h2 style="padding-top: 20px;" align="center" >Determinado Gráfico</h2>
+            <h2 style="padding-top: 20px;" align="center" >Choropleth Map - Movie Production Geographic Distribution</h2>
             <hr>
-            <!-- Graph Explanation-->
+            <!-- Choropleth map Explanation-->
             <div class="card mb-4">
-                <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
+                <div class="card-body">Choropleth Map displays divided geographical areas that are colored in relation the number of Movies Produced in the Country.<br>It allows to study the evolution of the great centers of cinema and how have they changed over the last decades.</div>
             </div>
             <div class="row">
-                <!-- Graph Entry-->
+                <!-- Choropleth map Entry-->
                 <div class="col-lg-8">
-                    <!-- Featured blog post-->
                     <div class="card mb-4">
-                        <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
-                        <div class="card-body">
-                            <div class="small text-muted">January 1, 2021</div>
-                            <h2 class="card-title">Featured Post Title</h2>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus possimus, veniam magni quis!</p>
-                            <a class="btn btn-primary" href="#!">Read more →</a>
-                        </div>
+                        <svg id="my_datavizMap" width="850" height="450"></svg>
+                        <div id="divtooltipMap"></div>
                     </div>
                 </div>
                 <!-- Graph Settings-->
                 <div class="col-lg-4">
-
-                    <!-- Search widget-->
+                    <!--Select TimeStamp-->
                     <div class="card mb-4">
-                        <div class="card-header">Search</div>
+                        <div class="card-header">Select TimeStamp:</div>
+                        <select class="form-control" name="decades" id="decades">
+                            <option id="selectdecade">All Time</option>
+                            <option id="selectdecade">1920s</option>
+                            <option id="selectdecade">1930s</option>
+                            <option id="selectdecade">1940s</option>
+                            <option id="selectdecade">1950s</option>
+                            <option id="selectdecade">1960s</option>
+                            <option id="selectdecade">1970s</option>
+                            <option id="selectdecade">1980s</option>
+                            <option id="selectdecade">1990s</option>
+                            <option id="selectdecade">2000s</option>
+                            <option id="selectdecade">2010s</option>
+                          </select>
+                    </div>
+                    <!-- Top 10 Producers Table-->
+                    <div class="card mb-4">
+                        <div class="card-header">Top 10 Producers</div>
                         <div class="card-body">
-                            <div class="input-group">
-                                <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
-                                <button class="btn btn-primary" id="button-search" type="button">Go!</button>
-                            </div>
+                            <table class="table table-sm" id="table_producers"></table>
                         </div>
-                    </div>
-                    <!-- Categories widget-->
-                    <div class="card mb-4">
-                        <div class="card-header">Categories</div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">Web Design</a></li>
-                                        <li><a href="#!">HTML</a></li>
-                                        <li><a href="#!">Freebies</a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-sm-6">
-                                    <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">JavaScript</a></li>
-                                        <li><a href="#!">CSS</a></li>
-                                        <li><a href="#!">Tutorials</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Side widget-->
-                    <div class="card mb-4">
-                        <div class="card-header">Side Widget</div>
-                        <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
-                    </div>
-                
+                    </div>               
                 </div>
             </div>
         </div>
+        <!--Choropleth map-->
+        
         <!-- Graph content-->
         <div class="container">
             <h2 style="padding-top: 20px;" align="center" >Determinado Gráfico</h2>
@@ -166,6 +148,9 @@
         <footer class="py-2 bg-dark">
             <div class="container"><p class="m-0 text-center text-white">UA MEI 2021/2022 - Pedro Silva (93011) & João Soares (93078)</p></div>
         </footer>
+
+        <!--Choropleth Map JS-->
+        <script src="js/choroplethMap.js"></script>
 
         <!-- Bootstrap core JS-->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
