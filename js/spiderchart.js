@@ -386,6 +386,7 @@ d3version3.csv("newdataset.csv", function(data) {
                 directorname2.innerHTML=''
                 directornumber2.innerHTML=''
                 director1legend.innerHTML='Color: <div class="box yellow"></div>'
+                director2legend.innerHTML=''
             }
         }
 });
