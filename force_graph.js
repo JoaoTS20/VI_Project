@@ -19,11 +19,77 @@ d3.csv("/newdataset.csv").then(draw);
 
 let data_cache = null
 let studiosFilter = new Set(["Pixar Animation Studios"])
-let autocomplete = new Set([]) 
-
+let autocomplete = new Set([])
+var tool = d3.select(".container").append("div").attr("class", "hover-tooltip").attr("opacity",0.1);
+let links_cache = null
+let nodes_cache = null
 
 d3.select("#button_add")
    .on("click", addStudio);
+
+
+
+
+
+// What to do when one circle is hovered
+var highlight = function(d){
+    let lang = d.target.__data__
+    console.log(lang)
+
+    let root = document.querySelector("g")
+    let dims = root.getBoundingClientRect()
+    d3.selectAll(".node").style("opacity", .1)
+    d3.select("#node"+lang.id).style("opacity", 1)
+    let tooltipText = ""
+    console.log(links_cache)
+    console.log(nodes_cache)
+
+    //Highlight movies made by them
+    if(lang.type == 'studio'){
+        let movies_made = 0
+        for(let link of links_cache){
+            if(link.source.id == lang.id || link.target.id == lang.id){
+                movies_made+=1
+                d3.select("#node"+link.source.id).style("opacity", 1)
+                d3.select("#node"+link.target.id).style("opacity", 1)
+            }
+        }
+        tooltipText = lang.name + " has made " + movies_made + " movies"
+    }
+    //Highlight movies studio
+    else{
+        let studio_ids = []
+        for(let link of links_cache){
+            if(link.source.id == lang.id){
+                d3.select("#node"+link.target.id).style("opacity", 1)
+                studio_ids.push(nodes_cache[link.target.id].name)
+            }
+            if(link.target.id == lang.id){
+                d3.select("#node"+link.source.id).style("opacity", 1)
+                studio_ids.push(nodes_cache[link.source.id].name)
+            }
+        }
+        tooltipText = lang.name + " was made by "
+        for(let studio of studio_ids){
+            tooltipText += (studio+",")
+        }
+        tooltipText = tooltipText.substring(0,tooltipText.length-1)
+    }
+
+    //Put number of  to the side
+    let tool = d3.select(".hover-tooltip")
+    tool.style("left", d.screenX + "px")
+    tool.style("top", d.screenY + "px")
+    tool.style("display", "inline-block")
+    tool.style("opacity", 1)
+    tool.html(d.children ? null :tooltipText);
+}
+
+// And when it is not hovered anymore
+var noHighlight = function(d){
+    d3.selectAll(".node").style("opacity", 1)
+    d3.select(".hover-tooltip").style("opacity", 0)
+}
 
 
 
@@ -230,6 +296,8 @@ function draw(data){
     let maxMovies = 10
     data = processData(data,studiosFilter,maxMovies)
 
+    links_cache = data.links
+    nodes_cache = data.nodes
     let oldFilter = studiosFilter
     //studiosFilter = new Set(studio_names)
     updateUI(studiosFilter,oldFilter)
@@ -280,7 +348,12 @@ function draw(data){
     .attr("class", "nodes")
     .selectAll("g")
     .data(data.nodes)
-    .enter().append("g")
+    .enter()
+    .append("g")
+    .attr("class","node")
+    .attr("id", function(d) { 
+        return "node"+d.id 
+    })
 
     //<image href="camera-video.svg" height="25" width="25" y="-11" x="-11"></image>
     var circles = node.append("circle")
@@ -318,8 +391,9 @@ function draw(data){
     })
     .style('font-size',"0.7em");
   
-    node.append("title")
-        .text(function(d) { return d.name; })
+
+    node.on("mouseover", highlight)
+        .on("mouseleave", noHighlight)
         
 
 
