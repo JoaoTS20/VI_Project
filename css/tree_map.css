@@ -1,0 +1,44 @@
+.center-this {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.pad-container{
+    padding: 5%;
+}
+.inline-this{
+    display: inline-block;
+}
+
+.tooltip-treemap {
+    position: absolute;
+    display: none;
+    width: auto;
+    height: auto;
+    background: none repeat scroll 0 0 white;
+    border: 0 none;
+    border-radius: 8px 8px 8px 8px;
+    box-shadow: -3px 3px 15px #888888;
+    color: black;
+    font: 12px sans-serif;
+    padding: 5px;
+    text-align: center;
+}
+
+.icon-text{
+    height: fit-content;
+    width: fit-content;
+    display: inline-flex;
+    padding: 5px;
+    border-radius: 8px;
+    border-color: black;
+    border-width: 2px;
+    align-content: center;
+    align-items: center;
+    border-style: solid;
+}
+.arrow{
+    text-align: end;
+    padding-right: 16em;
+}

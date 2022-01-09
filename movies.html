@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+
+        <script src="https://kit.fontawesome.com/629630cf7b.js" crossorigin="anonymous"></script>
+        <script src="https://d3js.org/d3.v6.min.js"></script>
+
+        
+        <title>Cinema-Goers</title>
+        <link rel="stylesheet" href="css/tree_map.css">
+        <link rel="stylesheet" href="css/stacked_area.css">
+        <link rel="stylesheet" href="css/general.css">
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+        <!-- Responsive navbar-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="/index.html">Cinema-Goers</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/movies.html">Movies</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/directores.html">Directores</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/production.html">Production</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Graph content-->
+        <div class="container">
+            <h2 style="padding-top: 20px;" align="center" >ScatterPlot - Budget By Popularity in Movies</h2>
+            <hr>
+            <!-- Graph Explanation-->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <p>The Scatterplot displays the relationship between the <i>Budget</i> of a Movie and the <i>Popularity Score</i> of a Movie. For each data point (Movie), the value of its <i>Popularity Score</i> is represented on the <b>X axis</b>, the <i>Budget</i> on the <b>Y axis</b>.</p>
+                    <p>It is possible to filter by <i>Production Company</i> so that only Movie points from the searched <i>Production Company</i> appear. To reset, search by nothing (empthy search bar).</p>                    
+                </div>
+            </div>
+            <div class="row">
+                <!-- Graph Entry-->
+                <div class="col-lg-8">
+                        <div class="graph" id="scatterplot_movies_budget"></div>
+                        <div id="divtooltip_scatterplot_movies_budget"></div>   
+                </div>
+                <!-- Graph Settings-->
+                <div class="col-lg-4">
+                    <!-- Search widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Filter By Production Company</div>
+                        <div class="card-body">
+                            <div class="input-group">
+                                <input class="form-control"  id="txtStudio" name="txt-Name" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+                                <button id="btsearch" type="submit" class="btn btn-primary" id="button-search" type="button">Search</button>
+                            </div>
+                        </div>
+                        <div class="card-body" id="moviecompanysearched"></div>
+                    </div>      
+                </div>
+            </div>
+        </div>
+        <!--End Graph ScatterPlot-->
+
+        <!-- Graph content-->
+        <div class="container">
+            <h2 style="padding-top: 20px;" align="center" >Tree Map - Languages/Gender by Movie Revenue</h2>
+            <hr>
+            <!-- Graph Explanation-->
+            <div class="card mb-4">
+                <div class="card-body">
+                    The Hierarchical Tree Map shows the relationship between the original Language of a Movie and it's revenue, by making showing via squared representations 
+                    the percentage of revenue each language has for all movies in the dataset.
+                    <br>
+                    By clicking on a determined language the tree map descends a level below and shows the a Tree Map of Movie Gender by Revenue for films of said determined language.
+                    <br>
+                    By hovering over a square in both levels it's possible to see how much exact revenue it represents.  
+                </div>
+            </div>
+            <div class="row">
+                <!-- Graph Entry-->
+                <div class="col-lg-8" id="tree_map_container">
+                    <div class="arrow" id="go-back">
+                        <div class="icon-text">Go Back<i id="go-back-icon"class="fas fa-arrow-circle-left fa-lg"></i></div>
+                        
+                    </div>
+                    <div class="div_tree_map"></div>
+
+                </div>
+            </div>
+        </div>
+        <!--End Graph Tree Map-->
+        <!-- Graph content-->
+        <div class="container">
+            <h2 style="padding-top: 20px;" align="center" >Stacked Area Chart - Evolution of Movies along time by Language and Production Company</h2>
+            <hr>
+            <!-- Graph Explanation-->
+            <div class="card mb-4">
+                <div class="card-body">
+                    The Stacked Area Chart displays how the number of Movies produced worlwide evolved by using either its original Language or its Production Companies.
+                    <br>
+                    It's possible to vizualizing this evolution by either entering the languages to compare or the name of the production companies.   
+                </div>
+            </div>
+            <div class="row">
+                <!-- Graph Entry-->
+                <div class="col-lg-8">
+                    <div class="div_stacked_area"></div>
+                </div>
+                <!-- Graph Settings-->
+                <div class="col-lg-4">
+
+                    <!-- Search widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Change between Language and Production Company</div>
+                        <div class="card-body">
+                            <select name="mode" class="form-select" id="mode">
+                                <option value="lang">Languages</option>
+                                <option value="studios">Production Companies</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Search widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Add a Language/Production Company to compare:</div>
+                        <div class="card-body">
+                            <div class="input-group">
+                                <input class="form-control" id="input_add" type="text" placeholder="Enter a term like English/Pixar" aria-label="Enter a search term" aria-describedby="button-search" />
+                                <button class="btn btn-primary" id="button_add" type="button">Add</button>
+                            </div>
+                            <br>
+                            <ul class="list-group" id="item_list">
+                                <li class="list-group-item">
+                                    <div class="inline-this">English</div>
+                                    <i class="fas fa-times-circle"></i>
+                                </li> 
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                      
+              
+
+        <!-- Footer-->
+        <footer class="py-2 bg-dark">
+            <div class="container"><p class="m-0 text-center text-white">UA MEI 2021/2022 - Pedro Silva (93011) & João Soares (93078)</p></div>
+        </footer>
+        <!--Script ScatterPlot-->
+        <script src="js/scatterplot.js"></script>
+
+        <!--Script Tree Map-->
+        <script type="module" src="js/iso_langs.js"></script>
+        <script type="module" src="js/tree_map.js"></script>
+
+        <!--Script Stacked Area-->
+        <script type="module" src="js/stacked_area.js"></script>
+
+
+        <!-- Bootstrap core JS-->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </body>
+</html>
