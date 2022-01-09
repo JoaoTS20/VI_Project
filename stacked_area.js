@@ -39,7 +39,7 @@ var button_add = document.getElementById("button_add")
 button_add.addEventListener('click',() => {
     let input_add = document.getElementById("input_add")
     let mode = document.getElementById("mode").value
-    let value = input_add.value
+    let value = input_add.value.toLowerCase()
     //TODO: Let me use country names, not isoCodes
     if(mode == 'lang'){
         if(value in reverse_isoLangs){
@@ -64,11 +64,13 @@ function updateUIClassesSelected(filterClasses){
         li.classList = ["list-group-item"]
         let div_text = document.createElement('div')
         div_text.classList = ["inline-this"]
-        if(mode == 'lang'){
-            div_text.innerText = isoLangs[element]['name']
+        if(mode == 'lang' && element in isoLangs){
+            let text = isoLangs[element]['name']
+            div_text.innerText = text[0].toUpperCase() + text.substring(1,text.length)
         }
         else{
-            div_text.innerText = element
+            let text = element
+            div_text.innerText = text[0].toUpperCase() + text.substring(1,text.length)
         }
         li.appendChild(div_text)
 
@@ -153,10 +155,16 @@ function draw(data){
     .domain([d3.min(data_lists, d => d[1]), [d3.max(data_lists, d => d[1])]])
     .range([0,width ]);
 
+
     //scale stuff
+    let min = d3.min(data_lists, d => d[1])
+    let max  = d3.max(data_lists, d => d[1])
     svg.append("g")
     .attr("transform", `translate(0,${height})`)
-    .call(d3.axisBottom(x).ticks(5));
+    .call(d3.axisBottom().scale(x)
+    .tickValues([min,1920,1940,1960,1980,2000,max])
+    .tickFormat((d, i) => ['1900','1920','1940','1960','1980','2000','2020'][i])
+    );
         
     // Add Y axis
     const y = d3.scaleLinear()
