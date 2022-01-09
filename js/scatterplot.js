@@ -25,6 +25,8 @@ let svg = d3.select("#scatterplot_movies_budget")
             `translate(${margin.left}, ${margin.top})`);
 
 
+var moviecompanysearched = document.getElementById("moviecompanysearched");
+
 
 //Read the data
 d3.csv("newdataset.csv").then( function(data) {
@@ -45,7 +47,9 @@ d3.csv("newdataset.csv").then( function(data) {
         .call(d3.axisLeft(y));
   
     generateGraph(data,svg,x,y,xAxis,yAxis)
-    
+
+    moviecompanysearched.innerHTML="<b>All Movie Companys</b>"
+
     // X axis label:
     svg.append("text")
         .attr("text-anchor", "end")
@@ -63,12 +67,24 @@ d3.csv("newdataset.csv").then( function(data) {
 
     d3.select("#btsearch").on("click", function() {
         studio = d3.select("#txtStudio").node().value;
+
         newData = data.filter(function(d){ 
             return  eval(d.production_companies).includes(studio)
         })
+
         if (newData.length==0){
             newData = data
-            console.log("empthy")
+            if(studio==""){
+                moviecompanysearched.innerHTML="<i>Search Reset!</i> <br> <b>All Movie Companys!</b>"
+            }
+            else{
+                moviecompanysearched.innerHTML="<i>Production Company not find!</i> <br> <b>All Movie Companys!</b>"
+            }
+            //console.log("empthy")
+        }
+        else{
+            moviecompanysearched.innerHTML="Production Company:  <b>" +studio+"</b>"
+
         }
 
         // Update X axis
@@ -87,6 +103,7 @@ d3.csv("newdataset.csv").then( function(data) {
         svg.selectAll("circle").transition().duration(750).remove();
         
         generateGraph(newData,svg,x,y,xAxis,yAxis)
+
     })
 
 })
