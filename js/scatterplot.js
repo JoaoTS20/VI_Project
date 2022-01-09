@@ -24,7 +24,9 @@ let svg = d3.select("#scatterplot_movies_budget")
         .attr("transform",
             `translate(${margin.left}, ${margin.top})`);
 
+
 var moviecompanysearched = document.getElementById("moviecompanysearched");
+
 
 //Read the data
 d3.csv("newdataset.csv").then( function(data) {
@@ -45,7 +47,9 @@ d3.csv("newdataset.csv").then( function(data) {
         .call(d3.axisLeft(y));
   
     generateGraph(data,svg,x,y,xAxis,yAxis)
+
     moviecompanysearched.innerHTML="<b>All Movie Companys</b>"
+
     // X axis label:
     svg.append("text")
         .attr("text-anchor", "end")
@@ -80,6 +84,7 @@ d3.csv("newdataset.csv").then( function(data) {
         }
         else{
             moviecompanysearched.innerHTML="Production Company:  <b>" +studio+"</b>"
+
         }
 
         // Update X axis
@@ -98,7 +103,7 @@ d3.csv("newdataset.csv").then( function(data) {
         svg.selectAll("circle").transition().duration(750).remove();
         
         generateGraph(newData,svg,x,y,xAxis,yAxis)
-        
+
     })
 
 })
