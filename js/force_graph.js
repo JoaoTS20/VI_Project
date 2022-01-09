@@ -191,6 +191,7 @@ function updateUI(studio_names,original_films){
 
         let icon = document.createElement('i')
         icon.classList = ["fas fa-times-circle"]
+        icon.style.setProperty("padding-left","2%")
         
         icon.addEventListener("click", () => {
             studiosFilter.delete(element)

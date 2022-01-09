@@ -1,0 +1,6 @@
+.item-list-spaced{
+    display: flex;
+    justify-content: space-evenly;
+    padding-right: 60%;
+    align-items: center;
+}

@@ -12,6 +12,8 @@
         
         <title>Cinema-Goers</title>
         <link rel="stylesheet" href="css/tree_map.css">
+        <link rel="stylesheet" href="css/stacked_area.css">
+        <link rel="stylesheet" href="css/general.css">
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Core theme CSS (includes Bootstrap)-->
@@ -48,7 +50,6 @@
             <div class="row">
                 <!-- Graph Entry-->
                 <div class="col-lg-8">
-                    <!-- Featured blog post-->
                         <div class="graph" id="scatterplot_movies_budget"></div>
                         <div id="divtooltip_scatterplot_movies_budget"></div>   
                 </div>
@@ -97,6 +98,60 @@
                 </div>
             </div>
         </div>
+
+        <!--End Graph Tree Map-->
+        <!-- Graph content-->
+        <div class="container">
+            <h2 style="padding-top: 20px;" align="center" >Stacked Area Chart - Evolution of Movies along time by Language and Production Company</h2>
+            <hr>
+            <!-- Graph Explanation-->
+            <div class="card mb-4">
+                <div class="card-body">
+                    The Stacked Area Chart displays how the number of Movies produced worlwide evolved by using either its original Language or its Production Companies.
+                    <br>
+                    It's possible to vizualizing this evolution by either entering the languages to compare or the name of the production companies.   
+                </div>
+            </div>
+            <div class="row">
+                <!-- Graph Entry-->
+                <div class="col-lg-8">
+                    <div class="div_stacked_area"></div>
+                </div>
+                <!-- Graph Settings-->
+                <div class="col-lg-4">
+
+                    <!-- Search widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Change between Language and Production Company</div>
+                        <div class="card-body">
+                            <select name="mode" class="form-select" id="mode">
+                                <option value="lang">Languages</option>
+                                <option value="studios">Production Companies</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Search widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Add a Language/Production Company to compare:</div>
+                        <div class="card-body">
+                            <div class="input-group">
+                                <input class="form-control" id="input_add" type="text" placeholder="Enter a term like English/Pixar" aria-label="Enter a search term" aria-describedby="button-search" />
+                                <button class="btn btn-primary" id="button_add" type="button">Add</button>
+                            </div>
+                            <br>
+                            <ul class="list-group" id="item_list">
+                                <li class="list-group-item">
+                                    <div class="inline-this">English</div>
+                                    <i class="fas fa-times-circle"></i>
+                                </li> 
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                      
+
               
 
         <!-- Footer-->
@@ -109,6 +164,11 @@
         <!--Script Tree Map-->
         <script type="module" src="js/iso_langs.js"></script>
         <script type="module" src="js/tree_map.js"></script>
+
+
+        <!--Script Stacked Area-->
+        <script type="module" src="js/stacked_area.js"></script>
+
 
 
         <!-- Bootstrap core JS-->
