@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Cinema-Goers</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+
+        <!--FontAwesowe-->
+        <link href="imports/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet"> <!--load all styles -->
+
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        
+        <!-- Google fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300" rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+
+        <!-- D3v3.js -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+        <script>
+            d3version3 = d3
+            window.d3 = null
+          </script>
+        <!-- D3v6.js -->
+		<script src="https://d3js.org/d3.v6.js"></script>
+        <!--css Spider Chart-->
+        <link rel="stylesheet" href="css/radarChart.css">
+    
+    </head>
+    <body>
+        <!-- Responsive navbar-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="/index.html">Cinema-Goers</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/movies.html">Movies</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/directores.html">Directores</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/production.html">Production</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Graph SpiderChart-->
+        <div class="container">
+            <h2 style="padding-top: 20px;" align="center" > Spider chart - Director's Specialty in Movie Genders</h2>
+            <hr>
+            <!-- Graph SpiderChart Explanation-->
+            <div class="card mb-4">
+                <div class="card-body">
+                    A radar or spider or web chart is a two-dimensional chart type designed to plot one or more series of values over multiple quantitative variables. In this case it will plot the percentage of <i>Movies</i> of a certain genre from a <i>Director</i>, being possible to check which genres of <i>Movies</i> the <i>Director</i> directs the most.
+                    <br>It also allows a direct comparison between directors.
+                </div>
+            </div>
+            <div class="row">
+                <!-- Graph SpiderChart Entry-->
+                <div class="col-lg-8">
+                    <div id="spiderchart" class="card mb-4">
+                    </div>
+                </div>
+                <!-- Graph SpiderChart Settings-->
+                <div class="col-lg-4">
+
+                    <!-- Select Director 1-->
+                    <div class="card mb-4">
+                        <div class="card-header">Search Director 1:</div>
+                        <div class="card-body">
+                            <select class="form-control" name="directores1" id="directores1">
+                                <option  selected="selected" id="selectdirector1">-----</option>
+                            </select>
+                            <br>
+                            <p><b id="directorName1"></b></p>
+                            <p id="directornumber1" ></p>
+                            <div id="directorlegend1"></div>
+                        </div>
+                    </div>
+
+                    <!-- Select Director 2-->
+                    <div class="card mb-4">
+                        <div class="card-header">Search Director 2:</div>
+                        <div class="card-body">
+                            <select class="form-control"  name="directores2" id="directores2">
+                                <option selected="selected" id="selectdirector2">-----</option>
+                            </select>
+                            <br>
+                            <p><b id="directorName2"></b></p>
+                            <p id="directornumber2" ></p>
+                            <div id="directorlegend2"></div>
+                        </div>
+                    </div>              
+                </div>
+            </div>
+        </div>
+        <!-- End Graph SpiderChart-->
+
+        <!-- Graph content-->
+        <div class="container">
+            <h2 style="padding-top: 20px;" align="center" >Determinado Gráfico</h2>
+            <hr>
+            <!-- Graph Explanation-->
+            <div class="card mb-4">
+                <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
+            </div>
+            <div class="row">
+                <!-- Graph Entry-->
+                <div class="col-lg-8">
+                    <!-- Featured blog post-->
+                    <div class="card mb-4">
+                        <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
+                        <div class="card-body">
+                            <div class="small text-muted">January 1, 2021</div>
+                            <h2 class="card-title">Featured Post Title</h2>
+                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus possimus, veniam magni quis!</p>
+                            <a class="btn btn-primary" href="#!">Read more →</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Graph Settings-->
+                <div class="col-lg-4">
+
+                    <!-- Search widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Search</div>
+                        <div class="card-body">
+                            <div class="input-group">
+                                <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+                                <button class="btn btn-primary" id="button-search" type="button">Go!</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Categories widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Categories</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <ul class="list-unstyled mb-0">
+                                        <li><a href="#!">Web Design</a></li>
+                                        <li><a href="#!">HTML</a></li>
+                                        <li><a href="#!">Freebies</a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-sm-6">
+                                    <ul class="list-unstyled mb-0">
+                                        <li><a href="#!">JavaScript</a></li>
+                                        <li><a href="#!">CSS</a></li>
+                                        <li><a href="#!">Tutorials</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Side widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Side Widget</div>
+                        <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
+                    </div>
+                
+                </div>
+            </div>
+        </div>
+              
+
+        <!-- Footer-->
+        <footer class="py-2 bg-dark">
+            <div class="container"><p class="m-0 text-center text-white">UA MEI 2021/2022 - Pedro Silva (93011) & João Soares (93078)</p></div>
+        </footer>
+        
+        <!--Js SpiderChart-->
+        <script src="js/radarChart.js"></script>	
+        <script src="js/spiderchart.js" charset="utf-8"></script>
+        
+        <!-- Bootstrap core JS-->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </body>
+</html>
