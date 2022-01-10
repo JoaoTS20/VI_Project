@@ -4,3 +4,16 @@
     padding-right: 60%;
     align-items: center;
 }
+
+.background-image{
+    background-image: url("/assets/vi_trans.png");
+}
+.logo-image{
+    width: 8em;
+    height: 100%;
+}
+.image-smaller{
+    width: 80%;
+    padding: 5%;
+    align-self: center;
+}
