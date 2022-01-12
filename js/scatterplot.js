@@ -78,7 +78,7 @@ d3.csv("newdataset.csv").then( function(data) {
                 moviecompanysearched.innerHTML="<i>Search Reset!</i> <br> <b>All Movie Companys!</b>"
             }
             else{
-                moviecompanysearched.innerHTML="<i>Production Company not find!</i> <br> <b>All Movie Companys!</b>"
+                moviecompanysearched.innerHTML="<i>Production Company not found!</i> <br> <b>All Movie Companys!</b>"
             }
             //console.log("empthy")
         }
