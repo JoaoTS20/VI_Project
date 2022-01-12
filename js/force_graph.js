@@ -1,5 +1,6 @@
 import { isoLangs,reverse_isoLangs } from "./iso_langs.js";
 
+//Based of: https://observablehq.com/@d3/force-directed-graph
 
 const margin = {top: 10, right: 30, bottom: 40, left: 50},
       width = 700 - margin.left - margin.right,
@@ -18,6 +19,7 @@ const svg = d3.select(".div_force_graph")
 d3.csv("/newdataset.csv").then(draw);
 
 
+//Global variables
 let data_cache = null
 let studiosFilter = new Set(["Pixar Animation Studios"])
 let autocomplete = new Set([])
@@ -32,15 +34,14 @@ d3.select("#button_add")
 // What to do when one circle is hovered
 var highlight = function(d){
     let lang = d.target.__data__
-    console.log(lang)
+
 
     let root = document.querySelector("g")
     let dims = root.getBoundingClientRect()
     d3.selectAll(".node").style("opacity", .1)
     d3.select("#node"+lang.id).style("opacity", 1)
     let tooltipText = ""
-    console.log(links_cache)
-    console.log(nodes_cache)
+
 
     //Highlight movies made by them
     if(lang.type == 'studio'){
@@ -83,7 +84,7 @@ var highlight = function(d){
     tool.html(d.children ? null :tooltipText);
 }
 
-// And when it is not hovered anymore
+// Go back when not hovering
 var noHighlight = function(d){
     d3.selectAll(".node").style("opacity", 1)
     d3.select(".hover-tooltip").style("opacity", 0)
@@ -91,13 +92,14 @@ var noHighlight = function(d){
 
 
 
-// Let's list the force we wanna apply on the network
-var simulation = d3.forceSimulation()                 // Force algorithm is applied to data.nodes
-    .force("link", d3.forceLink()                               // This force provides links between nodes
-        .id(function(d) { return d.id; })                     // This provide  the id of a node
+// Link each node and then add a center force to attract them
+// and a charge force to repulse them from center and they spread out
+var simulation = d3.forceSimulation()                 
+    .force("link", d3.forceLink()                               
+        .id(function(d) { return d.id; })                     
     )
-    .force("charge", d3.forceManyBody().strength(-800))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
-    .force("center", d3.forceCenter(width / 2, height / 2))     // This force attracts nodes to the center of the svg area
+    .force("charge", d3.forceManyBody().strength(-800))        
+    .force("center", d3.forceCenter(width / 2, height / 2))     
 
 
 //Handle zoom
@@ -113,7 +115,7 @@ d3.select('#force_graph')
 .call(zoom);
 
 
-
+//Get value inserted to filter and redraw
 function addStudio(){
     let query = document.getElementById("input_add").value.toLowerCase().trim() 
     studiosFilter.add(query)
@@ -121,7 +123,7 @@ function addStudio(){
     draw(null)
 }
 
-
+//Return true if at least one production company that worked on the movie was queried by user
 function anyContains(studios,studiosFilter){
     for(let studio of studios){
         studio = studio.toLowerCase().trim().replace(/\s/g, '');
@@ -135,6 +137,7 @@ function anyContains(studios,studiosFilter){
     return false
 }
 
+//Reformat from camelcase "ProductionCompanyName" to "Production Company Name"
 function formatStudioString(studios){
     for(let i = 0; i < studios.length; i++){
         let char_arr = studios[i].match(/[ A-Z]+/gm)
@@ -164,10 +167,13 @@ function capitalizeStudioString(studioName){
     return new_studio_name
 }
 
+
+//Update search items bar and add sugestions
 function updateUI(studio_names,original_films){
     let item_list = document.getElementById('item_list')
     item_list.textContent = '';
 
+    //Add sugestions from query
    if(autocomplete.size > 0){
         let sugestion_str = ''
         for(let sugestion of autocomplete){
@@ -203,14 +209,16 @@ function updateUI(studio_names,original_films){
     }
 }
 
-function processData(data,studiosFilter,maxMovies){
+
+//Process csv data, taking into account query by user and make movie and studio nodes
+// and finally set links between them
+function processData(data,studiosFilter){
     let id = 0
     autocomplete = new Set([])
     let res = {}
     let entities = {}
     let links_arr = []
     for(let movie of data){
-        //Set nodes
         let movie_name = movie.original_title
         let studios_string = movie.production_companies
         studios_string = studios_string.replace(/[\[\]''\"\s]+/gm,"");
@@ -219,7 +227,6 @@ function processData(data,studiosFilter,maxMovies){
 
 
         for(let studio of studios){
-            //If studio included in filter save that value
             for(let filter of studiosFilter){
                 let st_name = studio.toLowerCase().trim().replace(/\s/g, '')
                 filter = filter.toLowerCase().trim().replace(/\s/g, '')
@@ -262,28 +269,28 @@ function processData(data,studiosFilter,maxMovies){
 }
 
 function draw(data){
-    //Clean up
+    //Clean up and redoing of simulation
     if(simulation == null){
-        simulation = d3.forceSimulation()                 // Force algorithm is applied to data.nodes
-        .force("link", d3.forceLink()                               // This force provides links between nodes
-            .id(function(d) { return d.id; })                     // This provide  the id of a node
+        simulation = d3.forceSimulation()                 
+        .force("link", d3.forceLink()                               
+            .id(function(d) { return d.id; })                    
         )
-        .force("charge", d3.forceManyBody().strength(-800))         // This adds repulsion between nodes. Play with the -400 for the repulsion strength
-        .force("center", d3.forceCenter(width / 2, height / 2))     // This force attracts nodes to the center of the svg area
+        .force("charge", d3.forceManyBody().strength(-800))         
+        .force("center", d3.forceCenter(width / 2, height / 2))    
     }
     document.querySelector("#force_graph g").textContent = ''
+    
     //Save data or use previouslly loaded
     if(data == null){
         data = data_cache
     }
     data_cache = data
-    let maxMovies = 10
-    data = processData(data,studiosFilter,maxMovies)
+    data = processData(data,studiosFilter)
 
     links_cache = data.links
     nodes_cache = data.nodes
     let oldFilter = studiosFilter
-    //studiosFilter = new Set(studio_names)
+
     updateUI(studiosFilter,oldFilter)
 
     let mygroups = []
@@ -291,23 +298,22 @@ function draw(data){
         mygroups.push(node.name)
     }
 
-    // Initialize Color
+    // Initialize Color Scheme
     var color = d3.scaleOrdinal()
     .domain(mygroups)
     .range(d3.schemeSet2)
 
 
-     // Initialize the links
+     // Draw links lines
     var link = svg.append("g")
     .attr("class", "links")
     .selectAll("line")
     .data(data.links)
     .enter().append("line")
-    .style("stroke", "#888")
-    .attr("marker-end", d => 'url(#triangle)');
+    .style("stroke", "#888");
 
 
-
+    // Draw nodes
     var node = svg.append("g")
     .attr("class", "nodes")
     .selectAll("g")
@@ -319,6 +325,7 @@ function draw(data){
         return "node"+d.id 
     })
 
+    //Draw circles, fill them with corresponding icon and add bellow them labels
     var circles = node.append("circle")
     .attr("r", function(d){
         return d.type == 'movie' ?  20 : 30;
@@ -359,8 +366,7 @@ function draw(data){
         .on("mouseleave", noHighlight)
         
 
-
-    // Create a drag handler and append it to the node object instead
+    // Drag handler
     var drag_handler = d3.drag()
     .on("start", dragstarted)
     .on("drag", dragged)
@@ -376,7 +382,7 @@ function draw(data){
     simulation.force("link")
         .links(data.links);
 
-    // This function is run at each iteration of the force algorithm, updating the nodes position.
+    // Run for each iteration of the force algorithims applied previouslly, updates node/link positions
     function ticked() {
     link
         .attr("x1", function(d) { return d.source.x; })

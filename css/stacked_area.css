@@ -10,3 +10,7 @@
 .inline-this{
     display: inline-block;
 }
+
+#autocomplete{
+    color: #888888;
+}
