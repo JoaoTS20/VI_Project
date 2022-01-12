@@ -19,7 +19,7 @@ d3.csv("/newdataset.csv").then(draw);
 
 
 
-//returns in form os list of dicts 
+//Returns a dictionary with language -> revenue or genre -> revenue
 function processData(data,mode){
     let groups = []
     let lang_dict = {}
@@ -61,13 +61,12 @@ function processData(data,mode){
     }
     let lang_arr = []
     for(let lang in lang_dict){
-        console.log(lang_dict[lang])
         lang_arr.push(lang_dict[lang])
     }
     lang_arr.sort((a,b) => a.value - b.value)
 
     //This is done to filter out squares with very low revenue
-    //Get put in 'Others' square
+    //Which are put in the 'Others' square
     let other_value = 0
     let sum_of_all = d3.sum(lang_arr, d => d.value)
     if(mode == 'genders'){
@@ -96,7 +95,7 @@ function processData(data,mode){
     }
 
 
-    //Smaller exponent to change square size
+    //Exponential scale in order so squares don't go over a certain limit in contrast to others
     let valueScale = d3.scalePow()
         .exponent(1/4)
         .domain([0, d3.max(lang_arr, d => d.value)])
@@ -125,6 +124,8 @@ var tool = d3.select("#tree_map_container").append("div").attr("class", "tooltip
 
 d3.select("#go-back").style("opacity",0)
 
+
+//Change mode
 const go_back = d3.select("#go-back")
                 .on('click',() => {
                     mode = 'languages'
@@ -133,10 +134,10 @@ const go_back = d3.select("#go-back")
                     draw(null)
                 })
 
-// What to do when one square is hovered
+
+//Hover fucntion for one square
 var highlight = function(d){
     let lang = d.target.__data__
-    console.log(d.target)
 
     let root = document.querySelector("#g-treemap")
     let dims = root.getBoundingClientRect()
@@ -172,7 +173,7 @@ function formatNumber(number){
     return number
 }
 
-// And when it is not hovered anymore
+//Go Back to normal when not hovering
 var noHighlight = function(d){
     d3.selectAll(".squareArea").style("opacity", 1)
     d3.select(".tooltip-treemap").style("opacity", 0)
@@ -216,29 +217,25 @@ function draw(data){
     let mygroups = res[1]
     data_processed = res[2]
 
-    console.log(data)
 
-    // color palette
+    // Define color palete
     const color = d3.scaleOrdinal()
     .domain(mygroups)
     .range(d3.schemeSet2)
 
-    // stratify the data: reformatting for d3.js
+    // Stratify the data
     var root = d3.stratify()
-      .id(function(d) { return d.name; })   // Name of the entity (column name is name in csv)
-      .parentId(function(d) { return d.parent; })   // Name of the parent (column name is parent in csv)
+      .id(function(d) { return d.name; })  
+      .parentId(function(d) { return d.parent; }) 
       (data);
-    root.sum(function(d) { return +d.value })   // Compute the numeric value for each entity
+    root.sum(function(d) { return +d.value }) 
   
-    // Then d3.treemap computes the position of each element of the hierarchy
-    // The coordinates are added to the root object above
+    // Computes each elements position in the tree and it's dimensions
     d3.treemap()
       .size([width, height])
       .padding(4)
       (root)
   
-    console.log(root.leaves())
-    
     svg
       .selectAll("rect")
       .data(root.leaves())
@@ -256,21 +253,20 @@ function draw(data){
         })
         .style("stroke", "black")
         .style("fill",function(d){
-            console.log(d.id) 
             return color(d.id);
         })
         .on("mouseover", highlight)
         .on("mouseleave", noHighlight)
         .on("click",transition);
   
-    // and to add the text labels
+    // Text labels
     svg
       .selectAll("text")
       .data(root.leaves())
       .enter()
       .append("text")
-        .attr("x", function(d){ return d.x0+10})    // +10 to adjust position (more right)
-        .attr("y", function(d){ return d.y0+20})    // +20 to adjust position (lower)
+        .attr("x", function(d){ return d.x0+10})
+        .attr("y", function(d){ return d.y0+20})
         .text(function(d){ return d.data.name})
         .attr("font-size", "10px")
         .attr("fill", "white")
